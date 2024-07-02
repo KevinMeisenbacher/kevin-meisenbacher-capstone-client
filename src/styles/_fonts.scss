@@ -1,0 +1,18 @@
+* {
+    font-family: 'Aldrich';
+    color: white;
+
+    @font-face {
+        font-family: 'Aldrich';
+        src: local('Aldrich'),
+        url('../assets/fonts/Aldrich-Regular.ttf'),
+        format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Audiowide';
+        src: local('Audiowide'),
+        url('../assets/fonts/Audiowide-Regular.ttf'),
+        format('truetype');
+    }
+}

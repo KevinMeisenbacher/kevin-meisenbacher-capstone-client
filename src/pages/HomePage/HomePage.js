@@ -1,7 +1,16 @@
-const HomePage = () => {
-    return<main>
+import FormStart from '../../components/FormStart/FormStart';
+import './HomePage.scss';
+import { useState } from 'react';
 
-    </main>
+const HomePage = () => {
+    const [selected, setSelected] = useState(false);
+
+    return<>
+        <FormStart 
+            selected={selected}
+            setSelected={setSelected}
+        />
+    </>
 }
 
 export default HomePage;
