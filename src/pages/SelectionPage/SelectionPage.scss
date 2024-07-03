@@ -1,0 +1,18 @@
+@use '../../styles/_variables' as *;
+@use '../../styles/_fonts' as *;
+@use '../../styles/_mixins' as *;
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content {
+    display: flex;
+}
+
+.butt-next {
+    @include btn;
+    font-size: 32px;
+}

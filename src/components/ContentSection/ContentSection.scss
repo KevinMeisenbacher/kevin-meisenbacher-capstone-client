@@ -1,0 +1,27 @@
+@use '../../styles/_variables' as *;
+@use '../../styles/_fonts' as *;
+
+.content {
+    &-section {
+        margin: 0 5px;
+    }
+    &-header {
+        background-color: $grey;
+        padding: 1px 10px;
+        width: 200px;
+        border-radius: 5px;
+    }
+    &-box {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        width: 200px;
+        background-color: $black;
+        border-radius: 5px;
+        margin-bottom: 25px;
+
+        &__item {
+            padding: 5px;
+        }
+    }
+}

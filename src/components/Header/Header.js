@@ -1,4 +1,5 @@
-import logo from '../../img/logo.png';
+import './Header.scss';
+import logo from '../../assets/img/logo.png';
 
 const Header = () => {
     return <img src={logo}></img>

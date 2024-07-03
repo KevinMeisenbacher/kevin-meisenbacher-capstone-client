@@ -1,0 +1,11 @@
+@use './_variables' as *;
+@use './_fonts' as *;
+
+@mixin btn {
+    background-color: $darkBlue;
+    color: $lightBlue;
+    font-family: 'Audiowide';
+    padding: 10px 50px;
+    border: 5px solid $lightBlue;
+    border-radius: 10px;
+}
