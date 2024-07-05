@@ -1,0 +1,37 @@
+@use '../../styles/_variables' as *;
+@use '../../styles/_fonts' as *;
+@use '../../styles/_mixins' as *;
+
+.results-page {
+    display: flex;
+    justify-content: space-between;
+    width: 894px;
+}
+
+@mixin results {
+    @include content-box;
+    align-items: center;
+    width: 414px;
+    height: 500px;
+    border-radius: 10px;
+}
+
+.results-box {
+    @include results;
+    background-color: $darkBlue;
+    overflow-y: scroll;
+
+    & div {
+        width: 80%;
+        padding: 15px 20px;
+        margin: 10px;
+        border-radius: 5px;
+        background-color: $black;
+    }
+}
+
+.options-box {
+    @include results;
+    justify-content: center;
+    background-color: $black;
+}

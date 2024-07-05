@@ -2,12 +2,7 @@ import './HomePage.scss';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const HomePage = () => {
-    const [selected, setSelected] = useState(false);
-
-    const handleChoice = (choice) => {
-        setSelected(choice);
-    }
+const HomePage = ({ selected, setSelected }) => {
 
     return <main className='form-start'>
     <article className='form-start__container'>
@@ -15,12 +10,16 @@ const HomePage = () => {
         <section className='choices'>
             <div 
             className={`choices__box${selected === 'a' ? ' choices__box--selected' : ''}`} 
-            onClick={() => handleChoice('a')}selected={selected === 'a'}>
+            onClick={() => {
+                setSelected('a');
+            }}selected={selected === 'a'}>
                 <h3>Looking for new genres</h3>
             </div>
             <div 
             className={`choices__box${selected === 'b' ? ' choices__box--selected' : ''}`} 
-            onClick={() => handleChoice('b')}selected={selected === 'b'}>
+            onClick={() => {
+                setSelected('b');
+            }}selected={selected === 'b'}>
                 <h3>Further exploring what I like</h3>
             </div>
         </section>

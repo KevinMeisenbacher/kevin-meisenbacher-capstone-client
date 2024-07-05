@@ -9,3 +9,10 @@
     border: 5px solid $lightBlue;
     border-radius: 10px;
 }
+
+@mixin content-box {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 25px;
+}
