@@ -20,7 +20,7 @@ const Song = ({ song, url }) => {
     return (<div className="song">
         <p>{song.song_name}</p>
         <p>{artist.artist_name}</p>
-        <p>{subgenre.id >= 1 ? subgenre.subgenre_name : genre.genre_name}</p>
+        <p>{artist.subgenre_id >= 1 ? subgenre.subgenre_name : genre.genre_name}</p>
     </div>)
 }
 
