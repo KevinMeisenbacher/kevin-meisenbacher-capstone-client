@@ -4,36 +4,30 @@ import axios from 'axios';
 import ContentSection from '../../components/ContentSection/ContentSection';
 import './SelectionPage.scss';
 
-const SelectionPage = ({ selected, genreChoice, setGenreChoice }) => {
+const SelectionPage = ({ 
+    url, selected, genreChoice, setGenreChoice, secondChoice, setSecondChoice 
+}) => {
     const [genres, setGenres] = useState([]);
-    // const genres = [];
     const [loading, setLoading] = useState(true);
-    // This is what the headers on page 2 will say
-    const newGenresHeader = 'What genres are you trying to get into?';
-    const familiarGenresHeader = 'What music do you like?';
 
     useEffect(() => {
-        axios.get('http://localhost:8080/genres')
-        .then(response => {
-            setGenres(response.data);
-        })
+        axios.get(`${url}/genres`)
+        .then(response => setGenres(response.data))
         .then(setLoading(false));
     }, [])
     
     if (!loading) return <main>
         <div className='content'>
-            {/* TODO: Make the second section only
-            show up when the "looking for new genres"
-            box is clicked, give it a different header,
-            and give it a different link */}
             {selected === 'a' && <ContentSection 
                 genres={genres}
-                header={newGenresHeader}
-                genreChoice={genreChoice}
-                setGenreChoice={setGenreChoice} />}
+                header='What genres are you trying to get into?'
+                choiceList='curiosity'
+                genreChoice={secondChoice}
+                setGenreChoice={setSecondChoice} />}
             <ContentSection 
                 genres={genres}
-                header={familiarGenresHeader}
+                header='What music do you like?'
+                choiceList='preference'
                 genreChoice={genreChoice}
                 setGenreChoice={setGenreChoice} />
         </div>

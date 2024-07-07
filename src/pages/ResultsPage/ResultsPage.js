@@ -4,17 +4,11 @@ import './ResultsPage.scss';
 import Song from '../../components/Song/Song';
 import { Link } from 'react-router-dom';
 
-const ResultsPage = ({ genreChoice }) => {
+const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [songs, setSongs] = useState([]);
-    const [artist, setArtist] = useState('');
-    const [genre, setGenre] = useState('');
-    const [loading, setLoading] = useState(true);
-    const url = 'http://localhost:8080';
     useEffect(() => {
-       axios.get(`${url}/songs/${genreChoice.id}`)
-       .then(response => {
-        setSongs(response.data);
-       })
+        axios.get(`${url}/songs/${genreChoice.id}/${secondChoice && secondChoice.id}`)
+            .then(response => setSongs(response.data))
     }, []);
     return <div className="results-page">
         <article className='results-box'>
