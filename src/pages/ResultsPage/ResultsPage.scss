@@ -20,14 +20,6 @@
     @include results;
     background-color: $darkBlue;
     overflow-y: scroll;
-
-    & div {
-        width: 80%;
-        padding: 15px 20px;
-        margin: 10px;
-        border-radius: 5px;
-        background-color: $black;
-    }
 }
 
 .options-box {

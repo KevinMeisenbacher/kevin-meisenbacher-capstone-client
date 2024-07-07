@@ -8,8 +8,10 @@ const ResultsPage = ({ genreChoice }) => {
     const [songs, setSongs] = useState([]);
     const [artist, setArtist] = useState('');
     const [genre, setGenre] = useState('');
+    const [loading, setLoading] = useState(true);
+    const url = 'http://localhost:8080';
     useEffect(() => {
-       axios.get(`http://localhost:8080/songs/${genreChoice.id}`)
+       axios.get(`${url}/songs/${genreChoice.id}`)
        .then(response => {
         setSongs(response.data);
        })
@@ -17,7 +19,7 @@ const ResultsPage = ({ genreChoice }) => {
     return <div className="results-page">
         <article className='results-box'>
             {songs.map(song => {
-                return <Song song={song} />
+                return <Song song={song} url={url} />
             })}
         </article>
         <article className='options-box'>
