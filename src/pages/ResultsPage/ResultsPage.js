@@ -6,16 +6,28 @@ import { Link } from 'react-router-dom';
 
 const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [songs, setSongs] = useState([]);
+    const [filtered, setFiltered] = useState(false);
+    const [filterBtnText, setFilterBtnText] = useState('Show only like music');
+
+    const handleFilter = () => {
+        setFiltered(!filtered);
+        console.log('filtered', filtered);
+        setFilterBtnText(filtered ? 'Show only like music' : 'Show all music');
+    }
+
     useEffect(() => {
         axios.get(`${url}/songs/${genreChoice.id}/${secondChoice && secondChoice.id}`)
-            .then(response => setSongs(response.data))
-    }, []);
+            .then(response => {setSongs(response.data)})
+    }, [!filtered]);
     return <div className="results-page">
-        <article className='results-box'>
-            {songs.map(song => {
-                return <Song song={song} url={url} />
-            })}
-        </article>
+        <div className='results-side'>
+            <article className='results-box'>
+                {songs.map(song => {
+                    return <Song song={song} url={url} filtered={filtered} />
+                })}
+            </article>
+            <button onClick={() => handleFilter()}>{filterBtnText}</button>
+        </div>
         <article className='options-box'>
             <Link to='/selection'><h1>Refine Results</h1></Link>
             <Link to='/'><h1>Start Over</h1></Link>

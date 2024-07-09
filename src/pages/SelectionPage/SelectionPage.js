@@ -31,9 +31,14 @@ const SelectionPage = ({
                 genreChoice={genreChoice}
                 setGenreChoice={setGenreChoice} />
         </div>
-        <Link to='/results'>
-            <button className='butt-next'>next</button>
-        </Link>
+        <div className='navimagation-buttons'>
+            <Link to='/'>
+                <button className='butt-nav'>back</button>
+            </Link>
+            <Link to='/results'>
+                <button className='butt-nav'>next</button>
+            </Link>
+        </div>
     </main>
 }
 

@@ -1,12 +1,6 @@
-@use '../../styles/_variables' as *;
-@use '../../styles/_fonts' as *;
-@use '../../styles/_mixins' as *;
-
-.results-page {
-    display: flex;
-    justify-content: space-between;
-    width: 894px;
-}
+@use '../../partials/_variables' as *;
+@use '../../partials/_fonts' as *;
+@use '../../partials/_mixins' as *;
 
 @mixin results {
     @include content-box;
@@ -16,10 +10,24 @@
     border-radius: 10px;
 }
 
-.results-box {
-    @include results;
-    background-color: $darkBlue;
-    overflow-y: scroll;
+.results {
+    &-page {
+        display: flex;
+        justify-content: space-between;
+        width: 894px;
+    }
+
+    &-side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &-box {
+        @include results;
+        background-color: $darkBlue;
+        overflow-y: scroll;
+    }
 }
 
 .options-box {
