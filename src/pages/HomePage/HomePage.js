@@ -1,9 +1,7 @@
 import './HomePage.scss';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const HomePage = ({ selected, setSelected }) => {
-
     return <main className='form-start'>
     <article className='form-start__container'>
         <h2>Welcome to Music Buddy! What brings you here?</h2>

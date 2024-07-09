@@ -8,15 +8,14 @@ const SelectionPage = ({
     url, selected, genreChoice, setGenreChoice, secondChoice, setSecondChoice 
 }) => {
     const [genres, setGenres] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get(`${url}/genres`)
         .then(response => setGenres(response.data))
-        .then(setLoading(false));
+        .catch(err => console.error(err));
     }, [])
     
-    if (!loading) return <main>
+    return <main>
         <div className='content'>
             {selected === 'a' && <ContentSection 
                 genres={genres}

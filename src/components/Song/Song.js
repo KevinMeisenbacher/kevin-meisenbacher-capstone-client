@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import './Song.scss'
+import './Song.scss';
 
 const Song = ({ song, url, filtered }) => {
     const [artist, setArtist] = useState({});
@@ -12,7 +12,8 @@ const Song = ({ song, url, filtered }) => {
     // Query backend for whatever the link is
     const setItem = (location, action) => {
         axios.get(location)
-            .then(response => action(response.data[0]));
+            .then(response => action(response.data[0]))
+            .catch(err => console.error(err));
     }
     
     useEffect(() => {

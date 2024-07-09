@@ -1,9 +1,8 @@
 import './ContentSection.scss';
 
-const ContentSection = ({ genres, header, choiceList, genreChoice, setGenreChoice }) => {
+const ContentSection = ({ genres, header, choiceList, setGenreChoice }) => {
     const selectGenre = (genre) => {
         setGenreChoice(genre);
-        console.log(genreChoice);
     }
     return <section className='content-section'>
         <article className='content-header'>
@@ -14,9 +13,9 @@ const ContentSection = ({ genres, header, choiceList, genreChoice, setGenreChoic
                 return <>
                     <label className='content-box__item'>
                         <input 
+                            key={genre.id}
                             type="radio" 
                             name={choiceList}
-                            key={genre.id}
                             value={genre.genre_name} 
                             onClick={() => selectGenre(genre)}
                         />{genre.genre_name}

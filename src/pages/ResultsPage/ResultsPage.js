@@ -18,6 +18,7 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     useEffect(() => {
         axios.get(`${url}/songs/${genreChoice.id}/${secondChoice && secondChoice.id}`)
             .then(response => {setSongs(response.data)})
+            .catch(err => console.error(err));
     }, [!filtered]);
     return <div className="results-page">
         <div className='results-side'>

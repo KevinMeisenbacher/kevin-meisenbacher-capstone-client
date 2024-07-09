@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
+import axios from 'axios';
 import './App.scss';
 import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
@@ -12,6 +12,13 @@ function App() {
   const [selected, setSelected] = useState(false); // Page 1 choice
   const [genreChoice, setGenreChoice] = useState(null); // Page 2 choice
   const [secondChoice, setSecondChoice] = useState(null); // Page 2 alt choice
+
+  // Query backend for whatever the link is
+  const setItem = (location, action) => {
+      axios.get(location)
+          .then(response => action(response.data[0]));
+  }
+
   return (
     <main className="base-container">
       <BrowserRouter>
@@ -30,6 +37,7 @@ function App() {
             <Route path='/results' element={<ResultsPage 
               url={url}
               selected={selected}
+              setItem={setItem}
               genreChoice={genreChoice}
               secondChoice={secondChoice}/>} />
         </Routes>
