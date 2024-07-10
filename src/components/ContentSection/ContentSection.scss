@@ -9,12 +9,12 @@
     &-header {
         background-color: $grey;
         padding: 1px 10px;
-        width: 200px;
+        @include page-2-breakpoints;
         border-radius: 5px;
     }
     &-box {
         @include content-box;
-        width: 200px;
+        @include page-2-breakpoints;
         border-radius: 5px;
         background-color: $black;
 

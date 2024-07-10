@@ -1,11 +1,30 @@
 @use './_variables' as *;
 @use './_fonts' as *;
 
+// Breakpoints
+@mixin mobile {
+    @media (max-width: 767px) { @content; }
+} 
+
+@mixin tablet {
+    @media (min-width: 768px) { @content; }
+}
+
+@mixin laptop {
+    @media (min-width: 1280px) { @content; }
+}
+
+@mixin page-2-breakpoints {
+    @include mobile { width: 115px; }
+    @include tablet { width: 200px; }
+}
+
 @mixin btn {
     background-color: $darkBlue;
     color: $lightBlue;
     font-family: 'Audiowide';
-    padding: 10px 50px;
+    @include mobile { padding: 10px 0; }
+    @include tablet { padding: 10px 50px; }
     border: 5px solid $lightBlue;
     border-radius: 5px 5px 10px 10px;
 }

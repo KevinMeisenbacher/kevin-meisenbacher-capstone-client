@@ -18,6 +18,7 @@ main {
 
 .butt-nav {
     @include btn;
-    font-size: 32px;
+    @include mobile { width: 135px; }
+    font-size: 32px; 
     margin: 0 5px;
 }

@@ -25,7 +25,7 @@ const SelectionPage = ({
                 setGenreChoice={setSecondChoice} />}
             <ContentSection 
                 genres={genres}
-                header='What music do you like?'
+                header='What music do you currently listen to?'
                 choiceList='preference'
                 genreChoice={genreChoice}
                 setGenreChoice={setGenreChoice} />

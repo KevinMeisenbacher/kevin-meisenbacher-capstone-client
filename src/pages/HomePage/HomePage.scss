@@ -15,10 +15,18 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        text-align: center;
         background-color: $black;
-        padding: 25px;
         margin-bottom: 25px;
-        @media(min-width: $laptop) { width: 844px; }
+        @include mobile { 
+            width: 250px; 
+            padding: 15px;
+        }
+        @include tablet { 
+            width: 550px; 
+            padding: 25px;
+        }
+        @include laptop { width: 844px; }
     }
 
     &__edge {
@@ -29,7 +37,8 @@
 
 .butt-confirm {
     @include btn;
-    font-size: 64px;
+    @include mobile { width: 280px; }
+    @include tablet { font-size: 64px; }
 }
 
 .choices {
@@ -42,8 +51,21 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 407px;
-        height: 387px;
+        text-align: center;
+        
+        @include mobile { 
+            width: 120px; 
+            height: 145px;
+        }
+        @include tablet { 
+            width: 265px; 
+            height: 245px;
+        }
+        @include laptop { 
+            width: 407px; 
+            height: 387px;
+        }
+
         border-radius: .3125rem;
         background-color: $grey;
 
