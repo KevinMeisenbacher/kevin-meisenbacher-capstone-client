@@ -27,7 +27,7 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
                     return <Song song={song} url={url} filtered={filtered} />
                 })}
             </article>
-            <button onClick={() => handleFilter()}>{filterBtnText}</button>
+            <button className="butt-filter" onClick={() => handleFilter()}>{filterBtnText}</button>
         </div>
         <article className='options-box'>
             <Link to='/selection'><h1>Refine Results</h1></Link>

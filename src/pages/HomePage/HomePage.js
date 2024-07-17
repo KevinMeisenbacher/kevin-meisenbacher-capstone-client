@@ -8,9 +8,8 @@ const HomePage = ({ selected, setSelected }) => {
         <section className='choices'>
             <div 
             className={`choices__box${selected === 'a' ? ' choices__box--selected' : ''}`} 
-            onClick={() => {
-                setSelected('a');
-            }}selected={selected === 'a'}>
+            onClick={() => {setSelected('a')}}
+            selected={selected === 'a'}>
                 <h3>Looking for new genres</h3>
             </div>
             <div 

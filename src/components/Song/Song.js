@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import './Song.scss';
+import MusicPlayer from "../MusicPlayer/MusicPlayer";
 
 const Song = ({ song, url, filtered }) => {
     const [artist, setArtist] = useState({});
@@ -16,6 +17,7 @@ const Song = ({ song, url, filtered }) => {
             .catch(err => console.error(err));
     }
     
+    // Fetch the API to get all necessary data for the song
     useEffect(() => {
         setItem(`${url}/artists/${song.artist_id}`, setArtist);
         setItem(`${url}/genres/${song.genre_id}`, setGenre);
@@ -35,6 +37,7 @@ const Song = ({ song, url, filtered }) => {
             <p>{song.song_name}</p>
             <p>{artist.artist_name}</p>
             <p>{subgenre ? subgenre.subgenre_name : genre.genre_name}</p>
+            <MusicPlayer />
         </div>)
 }
 
