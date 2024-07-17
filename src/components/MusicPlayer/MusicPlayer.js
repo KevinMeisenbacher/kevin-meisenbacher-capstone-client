@@ -35,8 +35,8 @@ const MusicPlayer = () => {
     const min = Math.floor(sec / 60);
     const secRemain = Math.floor(sec % 60);
     const time = {
-        min: min.toFixed(2),
-        sec: secRemain
+        min: min,
+        sec: secRemain > 9 ? secRemain : `0${secRemain}`
     };
 
     // Keep grabbing current time
@@ -73,7 +73,8 @@ const MusicPlayer = () => {
 
             <div className="time">
                 <p>
-                    {currTime.min}:{currTime.sec}
+                    {currTime.min}:{currTime.sec > 9 
+                    ? currTime.sec : `0${currTime.sec}`}
                 </p>
             </div>
             <input
