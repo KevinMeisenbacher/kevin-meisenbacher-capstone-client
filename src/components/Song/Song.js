@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Song.scss';
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
 
-const Song = ({ song, url, filtered }) => {
+const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
@@ -22,11 +22,18 @@ const Song = ({ song, url, filtered }) => {
         setItem(`${url}/artists/${song.artist_id}`, setArtist);
         setItem(`${url}/genres/${song.genre_id}`, setGenre);
         setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre);
+        
         if (subgenre) {
-            if (subgenre.origin_id === song.genre_id
-            || subgenre.inspiration_id === song.genre_id) setRelated(true);
-            else setRelated(false);
+            if (secondChoice) {
+                if (subgenre.inspiration_id === secondChoice.id)
+                    setRelated(true);
+            }
+            else if (!secondChoice) {
+                if (subgenre.inspiration_id === genreChoice.id)
+                    setRelated(true);
+            }
         }
+        else setRelated(false);
         setShow(filtered // If filtered, show related music if it's in a subgenre
             ? subgenre && related
             : genre
@@ -37,7 +44,7 @@ const Song = ({ song, url, filtered }) => {
             <p>{song.song_name}</p>
             <p>{artist.artist_name}</p>
             <p>{subgenre ? subgenre.subgenre_name : genre.genre_name}</p>
-            <MusicPlayer />
+            <MusicPlayer song={song.song_name} />
         </div>)
 }
 

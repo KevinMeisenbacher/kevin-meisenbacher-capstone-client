@@ -13,11 +13,19 @@ function App() {
   const [genreChoice, setGenreChoice] = useState(null); // Page 2 choice
   const [secondChoice, setSecondChoice] = useState(null); // Page 2 alt choice
 
-  // Query backend for whatever the link is
-  const setItem = (location, action) => {
-      axios.get(location)
-          .then(response => action(response.data[0]));
-  }
+  const famGenre = <ResultsPage 
+    url={url}
+    selected={selected}
+    genreChoice={genreChoice}
+    secondChoice={secondChoice}
+  />
+
+  const newGenre = <ResultsPage 
+    url={url}
+    selected={selected}
+    genreChoice={genreChoice}
+    secondChoice={secondChoice}
+  />
 
   return (
     <main className="base-container">
@@ -34,12 +42,8 @@ function App() {
               setGenreChoice={setGenreChoice}
               secondChoice={secondChoice}
               setSecondChoice={setSecondChoice}/>} />
-            <Route path='/results' element={<ResultsPage 
-              url={url}
-              selected={selected}
-              setItem={setItem}
-              genreChoice={genreChoice}
-              secondChoice={secondChoice}/>} />
+            <Route path='/results/:id1' element={famGenre} />
+            <Route path='/results/:id1/:id2' element={newGenre} />
         </Routes>
       </BrowserRouter>
     </main>

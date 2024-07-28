@@ -28,13 +28,19 @@ const SelectionPage = ({
                 header='What music do you currently listen to?'
                 choiceList='preference'
                 genreChoice={genreChoice}
-                setGenreChoice={setGenreChoice} />
+                setGenreChoice={setGenreChoice} 
+            />
         </div>
         <div className='navimagation-buttons'>
             <Link to='/'>
                 <button className='butt-nav'>back</button>
             </Link>
-            <Link to='/results'>
+            <Link to={
+                `/results/${genreChoice && genreChoice.id}${secondChoice
+                    ? '/' + secondChoice.id
+                    : ''
+                }`
+            }>
                 <button className='butt-nav'>next</button>
             </Link>
         </div>

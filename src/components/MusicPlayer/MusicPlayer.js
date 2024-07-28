@@ -1,59 +1,60 @@
 
 import { useState, useEffect } from "react";
 import useSound from 'use-sound';
-import songTrack from '../../assets/tunes/Through The Fire And Flames.mp3';
+import { tunes } from './MusicArray';
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai"; // icons for play and pause
-import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"; // icons for next and previous track
-import { IconContext } from "react-icons"; // for customazing the icons
+import { IconContext } from "react-icons"; // for customizing the icons
 import './MusicPlayer.scss';
 
-const MusicPlayer = () => {
-    // Play/pause
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [play, { pause, duration, sound }] = useSound(songTrack);
+const MusicPlayer = ({ song }) => {
+  // Play/pause
+  const [isPlaying, setIsPlaying] = useState(false);
+  const selectedTrack = tunes.find(tune => tune && tune.songName.includes(song));
+  const defaultTrack = tunes.find(tune => tune && tune.songName.includes('Flames'));
+  const [play, { pause, duration, sound }] = useSound(selectedTrack ? selectedTrack.src : defaultTrack.src);
+    
+  // Timeline
+  const [currTime, setCurrTime] = useState({
+      min: "",
+      sec: "",
+  }); // current position of the audio in minutes and seconds
 
-    // Timeline
-    const [currTime, setCurrTime] = useState({
-        min: "",
-        sec: "",
-    }); // current position of the audio in minutes and seconds
+  const [seconds, setSeconds] = useState(); // current position of the audio in seconds
 
-    const [seconds, setSeconds] = useState(); // current position of the audio in seconds
+  // Play that funky music
+  const playingButton = () => {
+      if (isPlaying) {
+        pause(); // this will pause the audio
+        setIsPlaying(false);
+      } else {
+        play(); // this will play the audio
+        setIsPlaying(true);
+      }
+  };
 
-    // Play that funky music
-    const playingButton = () => {
-        if (isPlaying) {
-          pause(); // this will pause the audio
-          setIsPlaying(false);
-        } else {
-          play(); // this will play the audio
-          setIsPlaying(true);
+  const sec = duration / 1000;
+  const min = Math.floor(sec / 60);
+  const secRemain = Math.floor(sec % 60);
+  const time = {
+      min: min,
+      sec: secRemain > 9 ? secRemain : `0${secRemain}`
+  };
+
+  // Keep grabbing current time
+  useEffect(() => {
+      const interval = setInterval(() => {
+        if (sound) {
+          setSeconds(sound.seek([])); // setting the seconds state with the current state
+          const min = Math.floor(sound.seek([]) / 60);
+          const sec = Math.floor(sound.seek([]) % 60);
+          setCurrTime({
+            min,
+            sec,
+          });
         }
-    };
-
-    const sec = duration / 1000;
-    const min = Math.floor(sec / 60);
-    const secRemain = Math.floor(sec % 60);
-    const time = {
-        min: min,
-        sec: secRemain > 9 ? secRemain : `0${secRemain}`
-    };
-
-    // Keep grabbing current time
-    useEffect(() => {
-        const interval = setInterval(() => {
-          if (sound) {
-            setSeconds(sound.seek([])); // setting the seconds state with the current state
-            const min = Math.floor(sound.seek([]) / 60);
-            const sec = Math.floor(sound.seek([]) % 60);
-            setCurrTime({
-              min,
-              sec,
-            });
-          }
-        }, 1000);
-        return () => clearInterval(interval);
-      }, [sound]);
+      }, 1000);
+      return () => clearInterval(interval);
+    }, [sound]);
 
     return (
         <div className="component">
