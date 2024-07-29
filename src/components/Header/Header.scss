@@ -1,5 +1,21 @@
 @use '../../partials/mixins' as *;
 
+.header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.header-btns {
+    width: 20%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    height: fit-content;
+    position: absolute;
+    right: 10px;
+}
+
 img {
     @media (min-width: 300px) { 
         width: 280px; 
@@ -12,4 +28,9 @@ img {
     }
 
     @media (min-width: 1280px) { width: 894px; }
+}
+
+.butt-header {
+    @include btn;
+    margin: 5px 10px;
 }

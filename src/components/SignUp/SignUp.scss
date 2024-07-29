@@ -1,0 +1,23 @@
+@use '../../partials/mixins' as *;
+
+form {
+    @include form;
+    position: absolute;
+    right: 10px;
+    top: 100%;
+}
+
+h3 {
+    margin: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.input-field {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 5px;
+}
+
+button { @include btn }

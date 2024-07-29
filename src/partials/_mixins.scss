@@ -29,6 +29,16 @@
     border-radius: 5px 5px 10px 10px;
 }
 
+@mixin form {
+    background-color: $darkBlue;
+    color: $lightBlue;
+    font-family: 'Audiowide';
+    border: 5px solid $lightBlue;
+    border-radius: 5px 5px 10px 10px;
+    width: 350px;
+    padding: 5px;
+}
+
 @mixin content-box {
     display: flex;
     flex-direction: column;
