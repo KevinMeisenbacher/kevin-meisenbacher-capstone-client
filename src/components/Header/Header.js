@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Header.scss';
 import logo from '../../assets/img/logo.png';
 import SignUp from '../SignUp/SignUp';
@@ -11,10 +11,20 @@ const Header = () => {
     const [signingUp, setSigningUp] = useState(false);
     const [signedUp, setSignedUp] = useState(false);
     const [signupText, setSignupText] = useState('Sign Up');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (loggedIn) setLoginText('Log Out');
+    }, [!loading])
 
     const handleLogin = () => {
         setSigningUp(false);
         setLoggingIn(!loggingIn);
+        if (loginText === 'Log Out') {
+            setLoggedIn(false);
+            setLoginText('Log In');
+            setLoading(true);
+        }
     }
 
     const handleSignup = () => {
@@ -27,17 +37,18 @@ const Header = () => {
         <span className="header-btns">
             <button className='butt-header' onClick={() => handleLogin()}>{loginText}</button>
             <button className='butt-header' onClick={() => handleSignup()}>{signupText}</button>
-            {signingUp && <SignUp 
-                signedUp={signedUp}
-                setSignedUp={setSignedUp} 
-                setSignupText={setSignupText}
-            />}
-            {loggingIn && <SignIn 
-                loggedIn={loggedIn}
-                setLoggedIn={setLoggedIn} 
-                setLoginText={setLoginText}
-            />}
         </span>
+        {signingUp && <SignUp 
+            signedUp={signedUp}
+            setSignedUp={setSignedUp} 
+            setSignupText={setSignupText}
+        />}
+        {loggingIn && <SignIn 
+            loggedIn={loggedIn}
+            setLoggedIn={setLoggedIn} 
+            setLoginText={setLoginText}
+            setLoading={setLoading}
+        />}
     </header>
 }
 

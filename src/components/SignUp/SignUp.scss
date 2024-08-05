@@ -1,10 +1,35 @@
 @use '../../partials/mixins' as *;
+@use '../../partials/variables' as *;
 
 form {
-    @include form;
+    background-color: $darkBlue;
+    color: $lightBlue;
+    font-family: 'Audiowide';
+    border: 5px solid $lightBlue;
+    border-radius: 5px 5px 10px 10px;
+    width: 260px;
+    padding: 5px;
     position: absolute;
-    right: 10px;
-    top: 100%;
+    top: 150px;
+    right: calc(50% - 140px);
+    @include tablet {
+        top: 160px;
+        right: calc(50% - 300px);
+        width: 441px;
+        padding: 5px 75px;
+    }
+
+    @include laptop {
+        top: 80px;
+        right: 20px;
+        width: 300px;
+        padding: 5px;
+    }
+
+    @include desktop { 
+        width: 350px; 
+        right: 28px;
+    }
 }
 
 h3 {
@@ -15,9 +40,20 @@ h3 {
 
 .input-field {
     display: flex;
+    @include mobile {flex-direction: column;}
+    @include laptop {flex-direction: column;}
+    @include desktop {flex-direction: row;}
+    @include tablet {
+        margin-bottom: 30px;
+    }
+    @include laptop {margin-bottom: 5px;}
+    // flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
     margin-top: 5px;
 }
 
-button { @include btn }
+.butt-signup { 
+    @include btn; 
+    width: 170px;
+}

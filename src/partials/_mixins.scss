@@ -14,6 +14,10 @@
     @media (min-width: 1280px) { @content; }
 }
 
+@mixin desktop {
+    @media (min-width: 1700px) { @content; }
+}
+
 @mixin page-2-breakpoints {
     @include mobile { width: 115px; }
     @include tablet { width: 200px; }
@@ -23,20 +27,12 @@
     background-color: $darkBlue;
     color: $lightBlue;
     font-family: 'Audiowide';
-    @include mobile { padding: 10px 0; }
-    @include tablet { padding: 10px 50px; }
+    // @include mobile { padding: 10px 0; }
+    // @include tablet { padding: 10px 50px; }
+    padding: 10px 0;
+    @include desktop { padding: 10px 20px; }
     border: 5px solid $lightBlue;
     border-radius: 5px 5px 10px 10px;
-}
-
-@mixin form {
-    background-color: $darkBlue;
-    color: $lightBlue;
-    font-family: 'Audiowide';
-    border: 5px solid $lightBlue;
-    border-radius: 5px 5px 10px 10px;
-    width: 350px;
-    padding: 5px;
 }
 
 @mixin content-box {
