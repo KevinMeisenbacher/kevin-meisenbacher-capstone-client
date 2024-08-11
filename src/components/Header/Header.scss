@@ -1,4 +1,5 @@
 @use '../../partials/mixins' as *;
+@use '../../partials/variables' as *;
 
 .header {
     display: flex;
@@ -11,23 +12,23 @@
 }
 
 .header-btns {
-    width: 369px;
+    width: 280px;
     display: flex;
     justify-content: center;
 
     @include tablet { 
         width: fit-content;
-        position: absolute;
-        right: calc(50% - 380px);
         flex-direction: column;
     }
 
     @include laptop { 
         flex-direction: row;
-        right: calc(50% - 650px);
+        width: 310px;
     }
 
-    @include desktop { right: 20px; }
+    @include desktop { 
+        width: 370px;
+    }
 }
 
 img {
@@ -42,6 +43,50 @@ img {
     }
 
     @media (min-width: 1700px) { width: 894px; }
+}
+
+.side-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    margin: 0;
+    width: 280px;
+    padding: 0;
+
+    @include tablet { 
+        width: fit-content;
+        right: calc(50% - 380px);
+        flex-direction: column;
+    }
+
+    @include laptop { 
+        width: 310px;
+        top: 40px;
+        right: 25px;
+    }
+
+    @include desktop { 
+        width: 370px;
+        top: 90px;
+        right: 30px; 
+    }
+}
+
+.profile-box {
+    background-color: $black;
+    width: 98%;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.dashboard {
+    @include laptop {
+        border: 2px solid $lightBlue;
+        border-radius: 5px;
+    }
+
+    background-color: $darkBlue;
 }
 
 .butt-header {

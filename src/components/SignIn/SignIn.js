@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './SignIn.scss';
 
-const SignIn = ({ loggedIn, setLoggedIn, setLoginText, setLoading }) => {
+const SignIn = ({ loggedIn, setLoggedIn, setCurrentUser, setLoginText, setLoading }) => {
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
     });
+
+    const [user, setUser] = useState(null);
 
     const handleForm = (e) => {
         const {value, name} = e.target;
@@ -14,36 +16,58 @@ const SignIn = ({ loggedIn, setLoggedIn, setLoginText, setLoading }) => {
         if (name === 'password') setFormValues({...formValues, password: value});
     }
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        console.log(formValues);
+    useEffect(() => {
+        if (localStorage.getItem('username') !== 'undefined') {
+            setFormValues({
+                username: localStorage.getItem('username'),
+                password: localStorage.getItem('password')
+            });
+            console.log('formValues', formValues);
+            console.log('localStorage', localStorage);
+            setUser({
+                username: localStorage.getItem('username'),
+                password: localStorage.getItem('password')
+            });
+            login();
+        }
+        else console.log('Nothing in local storage');
+    }, [])
+
+    const login = () => {
+        console.log('Logging in');
         axios.post('http://localhost:8080/signin', formValues)
-        .then(response => console.log(response.data))
+        .then(response => {
+            sessionStorage.setItem("JWTtoken", response.data.token);
+        })
         .then(setLoggedIn(!loggedIn))
         .then(setLoginText(loggedIn
             ? 'Log Out'
             : 'Log In'
         ))
-        .then(setLoading(false))
         .catch(err => console.error(err));
     }
 
+    const handleLogin = (e) => {
+        e.preventDefault();
+        login();
+    }
+
     return (
-        <form>
-        <div className='input-field'>
+        <form className='form form--signin'>
+        <div className='input-field--signin'>
             <span></span> <h3>Log In</h3>
         </div>
-            <div className='input-field'>
+            <div className='input-field--signin'>
                 <span>Username</span> 
                 <input type="text" name="username" onChange={e => handleForm(e)} /> 
             </div>
-            <div className='input-field'>
+            <div className='input-field--signin'>
                 <span>Password</span> 
                 <input type="password" name="password" onChange={e => handleForm(e)} />
             </div>
-            <div className='input-field'>
+            <div>
                 <span></span> 
-                <button onClick={e => handleLogin(e)}>Confirm</button>
+                <button className='butt signin' onClick={e => handleLogin(e)}>Enter</button>
             </div>
         </form>
     )

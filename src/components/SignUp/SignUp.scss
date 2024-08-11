@@ -1,34 +1,32 @@
 @use '../../partials/mixins' as *;
 @use '../../partials/variables' as *;
 
-form {
+.form {
     background-color: $darkBlue;
-    color: $lightBlue;
-    font-family: 'Audiowide';
-    border: 5px solid $lightBlue;
-    border-radius: 5px 5px 10px 10px;
-    width: 260px;
-    padding: 5px;
-    position: absolute;
-    top: 150px;
+    width: 240px;
+    &--signin { padding: 20px; }
+    &--signup { padding: 5px 20px; }
+    position: absolute; 
+    top: 85px;
     right: calc(50% - 140px);
+
     @include tablet {
         top: 160px;
-        right: calc(50% - 300px);
+        right: 0;
         width: 441px;
         padding: 5px 75px;
     }
 
     @include laptop {
-        top: 80px;
-        right: 20px;
-        width: 300px;
+        position: relative;
+        top: 0;
+        width: 290px;
         padding: 5px;
+        margin: auto;
     }
 
     @include desktop { 
         width: 350px; 
-        right: 28px;
     }
 }
 
@@ -38,22 +36,46 @@ h3 {
     width: 100%;
 }
 
-.input-field {
+@mixin input {
     display: flex;
-    @include mobile {flex-direction: column;}
-    @include laptop {flex-direction: column;}
-    @include desktop {flex-direction: row;}
-    @include tablet {
-        margin-bottom: 30px;
-    }
-    @include laptop {margin-bottom: 5px;}
-    // flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
     margin-top: 5px;
+
+    @include mobile { flex-direction: column; }
+    @include tablet { margin-bottom: 30px; }
+
+    @include laptop { 
+        flex-direction: column; 
+        margin-bottom: 30px;
+    }
+
+    @include desktop { flex-direction: row; }
 }
 
-.butt-signup { 
-    @include btn; 
-    width: 170px;
+.input-field {        
+    &--signup { 
+        @include input;
+
+        @include mobile {
+            @include input;
+            margin-bottom: 15px; 
+        }
+    }
+
+    &--signin { 
+        @include input;
+
+        @include mobile {
+            @include input;
+            margin-bottom: 30px; 
+        }
+    }
 }
+
+.butt {
+    width: 100%; 
+    padding: 5px;
+}
+
+.signin { margin: 20px 0; }
