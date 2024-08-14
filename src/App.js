@@ -6,6 +6,8 @@ import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
 import SelectionPage from './pages/SelectionPage/SelectionPage';
 import ResultsPage from './pages/ResultsPage/ResultsPage';
+import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp';
 
 function App() {
   const url = 'http://localhost:8080';
@@ -34,16 +36,20 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage 
             selected={selected}
-            setSelected={setSelected}/>} />
-            <Route path='/selection' element={<SelectionPage 
-              url={url}
-              selected={selected}
-              genreChoice={genreChoice}
-              setGenreChoice={setGenreChoice}
-              secondChoice={secondChoice}
-              setSecondChoice={setSecondChoice}/>} />
-            <Route path='/results/:id1' element={famGenre} />
-            <Route path='/results/:id1/:id2' element={newGenre} />
+            setSelected={setSelected}/>} 
+          />
+          <Route path='/selection' element={<SelectionPage 
+            url={url}
+            selected={selected}
+            genreChoice={genreChoice}
+            setGenreChoice={setGenreChoice}
+            secondChoice={secondChoice}
+            setSecondChoice={setSecondChoice}/>} 
+          />
+          <Route path='/login' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/results/:id1' element={famGenre} />
+          <Route path='/results/:id1/:id2' element={newGenre} />
         </Routes>
       </BrowserRouter>
     </main>

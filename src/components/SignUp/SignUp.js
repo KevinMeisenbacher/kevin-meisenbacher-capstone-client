@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.scss';
 
-const SignUp = ({ signedUp, setSignedUp, setSignupText}) => {
+const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
@@ -23,6 +24,7 @@ const SignUp = ({ signedUp, setSignedUp, setSignupText}) => {
             setFormValues(formValues);
         else return;
     }
+    const location = useLocation();
 
     const handleSignup = (e) => {
         e.preventDefault();
@@ -37,7 +39,7 @@ const SignUp = ({ signedUp, setSignedUp, setSignupText}) => {
         ))
         .catch(err => console.error(err));
     }
-    return (
+    if (location.pathname.includes('signup')) return (
         <form className='form form--signup' onSubmit={e => handleSignup(e)}>
             <div className='input-field--signup'>
                 <span></span> <h3>Sign Up</h3>

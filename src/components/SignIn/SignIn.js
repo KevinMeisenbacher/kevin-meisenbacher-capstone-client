@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './SignIn.scss';
 
-const SignIn = ({ loggedIn, setLoggedIn, setCurrentUser, setLoginText, setLoading }) => {
+const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, setToken, setDisplay, loading, setLoading }) => {
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
     });
 
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
     const handleForm = (e) => {
         const {value, name} = e.target;
@@ -16,34 +18,19 @@ const SignIn = ({ loggedIn, setLoggedIn, setCurrentUser, setLoginText, setLoadin
         if (name === 'password') setFormValues({...formValues, password: value});
     }
 
-    useEffect(() => {
-        if (localStorage.getItem('username') !== 'undefined') {
-            setFormValues({
-                username: localStorage.getItem('username'),
-                password: localStorage.getItem('password')
-            });
-            console.log('formValues', formValues);
-            console.log('localStorage', localStorage);
-            setUser({
-                username: localStorage.getItem('username'),
-                password: localStorage.getItem('password')
-            });
-            login();
-        }
-        else console.log('Nothing in local storage');
-    }, [])
-
     const login = () => {
-        console.log('Logging in');
         axios.post('http://localhost:8080/signin', formValues)
         .then(response => {
             sessionStorage.setItem("JWTtoken", response.data.token);
+            setToken(response.data.token);
         })
-        .then(setLoggedIn(!loggedIn))
-        .then(setLoginText(loggedIn
-            ? 'Log Out'
-            : 'Log In'
-        ))
+        .then(setLoggedIn(true))
+        .then(setLoggingIn(false))
+        .then(setDisplay('none'))
+        .then(setLoginText('Log Out'))
+        .then(navigate('/'))
+        .then(setLoading(false))
+        .then(console.log('loading', loading))
         .catch(err => console.error(err));
     }
 
@@ -52,25 +39,32 @@ const SignIn = ({ loggedIn, setLoggedIn, setCurrentUser, setLoginText, setLoadin
         login();
     }
 
-    return (
-        <form className='form form--signin'>
-        <div className='input-field--signin'>
-            <span></span> <h3>Log In</h3>
-        </div>
-            <div className='input-field--signin'>
-                <span>Username</span> 
-                <input type="text" name="username" onChange={e => handleForm(e)} /> 
-            </div>
-            <div className='input-field--signin'>
-                <span>Password</span> 
-                <input type="password" name="password" onChange={e => handleForm(e)} />
-            </div>
-            <div>
-                <span></span> 
-                <button className='butt signin' onClick={e => handleLogin(e)}>Enter</button>
-            </div>
-        </form>
-    )
+    const location = useLocation();
+
+    const renderForm = () => {
+        if (location.pathname.includes('login')) return (
+            <form className={`form form--signin`} >
+                <div className='input-field--signin'>
+                    <span></span> <h3>Log In</h3>
+                </div>
+                <div className='input-field--signin'>
+                    <span>Username</span> 
+                    <input type="text" name="username" onChange={e => handleForm(e)} /> 
+                </div>
+                <div className='input-field--signin'>
+                    <span>Password</span> 
+                    <input type="password" name="password" onChange={e => handleForm(e)} />
+                </div>
+                <div>
+                    <span></span> 
+                    <button className='butt signin' onClick={e => handleLogin(e)}>Enter</button>
+                </div>
+            </form>
+        );
+        else return <></>;
+    }
+
+    return renderForm();
 }
 
 export default SignIn;
