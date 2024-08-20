@@ -10,8 +10,28 @@
     background-color: $black;
     & p { 
         margin: 5px 0; 
+        text-wrap: nowrap;
     }
     text-align: center;
+
+    &-contents {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        & img {
+            width: 33.7px;
+            height: 37px;
+            margin: 0;
+        }
+    }
+
+    &-filterer {
+        width: 67.6px;
+        position: absolute;
+        right: 0;
+    }
 }
 
 .butt-filter {

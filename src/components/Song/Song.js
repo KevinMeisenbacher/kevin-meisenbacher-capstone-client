@@ -3,6 +3,10 @@ import axios from 'axios';
 import './Song.scss';
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
 
+// Images
+import like from '../../assets/img/banger.png';
+import hate from '../../assets/img/poop.png';
+
 const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
@@ -39,11 +43,29 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
             : genre
         );
     }, [!subgenre, filtered]);
+
+    const handleLike = () => {
+        axios.put(`http://localhost:8080/${song.id}/like`)
+    }
+
+    const handleHate = () => {
+        axios.put(`http://localhost:8080/${song.id}/hate`)
+    }
+    
     if (show)
         return (<div className="song">
-            <p>{song.song_name}</p>
-            <p>{artist.artist_name}</p>
-            <p>{subgenre ? subgenre.subgenre_name : genre.genre_name}</p>
+            <div className="song-contents">
+                <span className="song-filterer"></span>
+                <span className="song-info">
+                    <p>{song.song_name}</p>
+                    <p>{artist.artist_name}</p>
+                    <p>{subgenre ? subgenre.subgenre_name : genre.genre_name}</p>
+                </span>
+                <span className="song-filterer">
+                    <img src={like} onClick={() => handleLike()} alt="like" />
+                    <img src={hate} onClick={() => handleHate()} alt="hate" />
+                </span>
+            </div>
             <MusicPlayer song={song.song_name} />
         </div>)
 }

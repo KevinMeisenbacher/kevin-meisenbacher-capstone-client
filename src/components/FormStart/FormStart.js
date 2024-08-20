@@ -1,4 +1,4 @@
-// import './FormStart.scss';
+import './FormStart.scss';
 
 const FormStart = ({ selected, setSelected }) => {
     const handleChoice = (choice) => {

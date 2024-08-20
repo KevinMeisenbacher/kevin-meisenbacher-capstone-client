@@ -51,6 +51,7 @@
 
 button {
     @include mobile {
-        width: 250px;
+        width: 280px;
+        margin-bottom: 50px;
     }
 }

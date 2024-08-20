@@ -14,18 +14,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        text-align: center;
         background-color: $black;
+        padding: 25px;
+        margin-top: 50px;
         margin-bottom: 25px;
-        @include mobile { 
-            width: 250px; 
-            padding: 15px;
-        }
-        @include tablet { 
-            width: 550px; 
-            padding: 25px;
-        }
-        @include laptop { width: 844px; }
+        @media(min-width: $laptop) { width: 844px; }
     }
 
     &__edge {

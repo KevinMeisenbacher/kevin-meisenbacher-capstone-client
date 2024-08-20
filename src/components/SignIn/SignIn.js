@@ -21,6 +21,7 @@ const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, 
     const login = () => {
         axios.post('http://localhost:8080/signin', formValues)
         .then(response => {
+            console.log(response.data);
             sessionStorage.setItem("JWTtoken", response.data.token);
             setToken(response.data.token);
         })

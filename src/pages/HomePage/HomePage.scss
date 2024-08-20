@@ -26,7 +26,7 @@
             width: 550px; 
             padding: 25px;
         }
-        @include desktop { width: 844px; }
+        @include laptop { width: 844px; }
     }
 
     &__edge {
@@ -61,7 +61,7 @@
             width: 265px; 
             height: 245px;
         }
-        @include desktop { 
+        @include laptop { 
             width: 407px; 
             height: 387px;
         }
