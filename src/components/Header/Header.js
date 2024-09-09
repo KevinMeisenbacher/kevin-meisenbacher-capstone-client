@@ -59,6 +59,7 @@ const Header = () => {
           setLoading(false);
           console.log(response.data);
           setCurrentUser(response.data.username);
+          sessionStorage.setItem('username', response.data.username);
           setLoggedIn(true);
           setToken(sessionStorage.getItem('JWTtoken'));
           console.log(token);

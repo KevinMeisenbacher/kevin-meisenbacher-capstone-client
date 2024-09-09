@@ -45,11 +45,11 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     }, [!subgenre, filtered]);
 
     const handleLike = () => {
-        axios.put(`http://localhost:8080/${song.id}/like`)
+        axios.post(`http://localhost:8080/like/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
     }
 
     const handleHate = () => {
-        axios.put(`http://localhost:8080/${song.id}/hate`)
+        axios.post(`http://localhost:8080/hate/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
     }
     
     if (show)
