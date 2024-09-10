@@ -6,6 +6,8 @@ import { Link, useParams } from 'react-router-dom';
 
 const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [songs, setSongs] = useState([]);
+    const [filteredSongs, setFilteredSongs] = useState([]);
+    const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [filterBtnText, setFilterBtnText] = useState('Show only like music');
     const { id1, id2 } = useParams();
@@ -15,21 +17,46 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         setFilterBtnText(filtered ? 'Show only like music' : 'Show all music');
     }
 
-    useEffect(() => {
-        axios.get(`${url}/songs/${genreChoice && id1}/${secondChoice && id2}`)
-            .then(response => {setSongs(response.data)})
+    // Query backend for whatever the link is
+    const setArray = (location, action) => {
+        axios.get(location)
+            .then(response => action(response.data))
             .catch(err => console.error(err));
-    }, [!filtered, songs.length === 0]);
+    }
+
+    const setItem = (location, action) => {
+        axios.get(location)
+            .then(response => action(response.data[0]))
+            .catch(err => console.error(err));
+    }
+
+    useEffect(() => {
+        setArray(`${url}/songs`, setSongs);
+        setArray(`${url}/songs/${genreChoice && id1}/${secondChoice && id2}`, setFilteredSongs);
+        setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers);
+        bangers.forEach(banger => {
+            songs.map(song => {
+                if (song.genre_id === banger.genre_id ||
+                    song.genre_id === banger.inspiration_id
+                ) {
+                    console.log(song);
+                    setFilteredSongs([...filteredSongs, song]);
+                }
+            })
+        });
+        console.log('filteredSongs', filteredSongs);
+    }, [!filtered, songs.length === 0, !filteredSongs]);
     return <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
-                {songs.map(song => {
+                {filteredSongs.map(song => {
                     return <Song 
                         song={song} 
                         url={url} 
                         filtered={filtered} 
                         genreChoice={genreChoice} 
                         secondChoice={secondChoice}
+                        setItem={setItem}
                     />
                 })}
             </article>

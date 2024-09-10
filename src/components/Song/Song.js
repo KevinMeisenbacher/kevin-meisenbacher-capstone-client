@@ -7,25 +7,30 @@ import MusicPlayer from "../MusicPlayer/MusicPlayer";
 import like from '../../assets/img/banger.png';
 import hate from '../../assets/img/poop.png';
 
-const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
+const Song = ({ song, url, genreChoice, secondChoice, filtered, setItem }) => {
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
     const [show, setShow] = useState(null);
     const [related, setRelated] = useState(false);
-
-    // Query backend for whatever the link is
-    const setItem = (location, action) => {
-        axios.get(location)
-            .then(response => action(response.data[0]))
-            .catch(err => console.error(err));
-    }
+    const [banger, setBanger] = useState({});
     
     // Fetch the API to get all necessary data for the song
     useEffect(() => {
         setItem(`${url}/artists/${song.artist_id}`, setArtist);
         setItem(`${url}/genres/${song.genre_id}`, setGenre);
         setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre);
+
+        // Get songs that are liked by the user
+        axios.get(`${url}/bangers/${sessionStorage.getItem('username')}`)
+        .then(response => {
+            const { data } = response;
+            if (data.genre_id === song.genre_id ||
+                subgenre && data.genre_id === subgenre.inspiration_id
+            )
+                setBanger(song);
+        })
+        .catch(err => console.error(err));
         
         if (subgenre) {
             if (secondChoice) {
