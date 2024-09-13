@@ -6,6 +6,9 @@ import { Link, useParams } from 'react-router-dom';
 
 const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [songs, setSongs] = useState([]);
+    const [curatedSongs, setCuratedSongs] = useState([]);
+    const [famGenreSongs, setFamGenreSongs] = useState([]);
+    const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [filterBtnText, setFilterBtnText] = useState('Show only like music');
     const { id1, id2 } = useParams();
@@ -15,15 +18,33 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         setFilterBtnText(filtered ? 'Show only like music' : 'Show all music');
     }
 
-    useEffect(() => {
-        axios.get(`${url}/songs/${genreChoice && id1}/${secondChoice && id2}`)
-            .then(response => {setSongs(response.data)})
+    const setArray = (location, action) => {
+        axios.get(location)
+            .then(response => action(response.data))
             .catch(err => console.error(err));
-    }, [!filtered, songs.length === 0]);
+    }
+
+    useEffect(() => {
+        setArray(`${url}/songs`, setSongs);
+        setArray(`${url}/songs/${genreChoice && id1}/${secondChoice && id2}`, setCuratedSongs);
+        setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers);
+        const similar = [];
+        bangers.forEach(banger => {
+            songs.map(song => {
+                if (song.genre_id === banger.genre_id ||
+                    song.genre_id === banger.inspiration_id
+                ) {
+                    similar.push(song);
+                }
+            })
+        });
+        setFamGenreSongs([similar]);
+        console.log('famGenreSongs', famGenreSongs);
+    }, [!filtered, songs.length === 0, !curatedSongs, !famGenreSongs]);
     return <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
-                {songs.map(song => {
+                {curatedSongs.map(song => {
                     return <Song 
                         song={song} 
                         url={url} 
