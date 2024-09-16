@@ -35,6 +35,10 @@
     }
 }
 
+.liked, .hated {
+    opacity: 50%;
+}
+
 .butt-filter {
     @include btn;
     font-size: 20px;

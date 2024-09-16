@@ -12,14 +12,36 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
     const [show, setShow] = useState(null);
-    const [related, setRelated] = useState(false);
+    const [related, setRelated] = useState({});
     const [banger, setBanger] = useState({});
     const [crap, setCrap] = useState({});
+    const [liked, setLiked] = useState('');
+    const [hated, setHated] = useState('');
 
     const setItem = (location, action) => {
         axios.get(location)
             .then(response => action(response.data[0]))
             .catch(err => console.error(err));
+    }
+
+    // Get songs that are liked/hated by the user
+    const markSong = (location, action) => {
+        axios.get(`${url}/${location}/${sessionStorage.getItem('username')}`)
+        .then(response => {
+            const { data } = response;
+
+            for (let i=0; i<data.length; i++){
+                if (data[i].artist_id === song.artist_id){ 
+                    action(song);
+                }
+            }
+
+            if (song === banger) setLiked('liked');
+            else setLiked('');
+            if (song === crap) setHated('hated');
+            else setHated('');
+        })
+        .catch(err => console.error(err));
     }
     
     // Fetch the API to get all necessary data for the song
@@ -27,64 +49,51 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
         setItem(`${url}/artists/${song.artist_id}`, setArtist);
         setItem(`${url}/genres/${song.genre_id}`, setGenre);
         setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre);
+        
+        markSong('bangers', setBanger);
+        markSong('crap', setCrap);
 
-        // Get songs that are liked by the user
-        axios.get(`${url}/bangers/${sessionStorage.getItem('username')}`)
-        .then(response => {
-            const { data } = response;
-            for (let i=0; i<data.length; i++){
-                console.log(data[i]);
-                if (data[i].artist_id === song.artist_id){ 
-                    setBanger(song);
-                }
-            }
-        })
-        .catch(err => console.error(err));
-        console.log('banger', banger);
-
-        // Get songs that are hated by the user
-        axios.get(`${url}/crap/${sessionStorage.getItem('username')}`)
-        .then(crapResponse => {
-            const { data } = crapResponse;
-            for (let j=0; j<data.length; j++){
-                console.log(data[j]);
-                if (data[j].artist_id === song.artist_id){
-                    setCrap(song);
-                }
-            }
-        })
-        .catch(err => console.error(err));
-        console.log('crap', crap);
+        if (song.artist_id === banger.artist_id) setRelated(song);
+        else setRelated({});
         
         if (subgenre) {
             if (secondChoice) {
                 if (subgenre.inspiration_id === secondChoice.id)
-                    setRelated(true);
+                    setRelated(song);
             }
             else if (!secondChoice) {
                 if (subgenre.inspiration_id === genreChoice.id)
-                    setRelated(true);
+                    setRelated(song);
             }
         }
-        else setRelated(false);
+        else setRelated({});
+
         setShow(filtered // If filtered, show related music if it's in a subgenre
-            ? subgenre && related
+            ? liked
             : genre
         );
-    }, [!subgenre, filtered, crap]);
+    }, [!subgenre, filtered, banger, crap]);
 
     const handleLike = () => {
         if (song === banger)
-            axios.post(`http://localhost:8080/unlike/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
+            axios.post(`http://localhost:8080/unlike/${song.artist_id}/${sessionStorage.getItem('username')}`)
+            .then(setLiked(''))
+            .catch(err => console.error(err));
         else
             axios.post(`http://localhost:8080/like/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
+            .then(setLiked('liked'))
+            .catch(err => console.error(err));
     }
 
     const handleHate = () => {
         if (song === crap)
-            axios.post(`http://localhost:8080/unhate/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
+            axios.post(`http://localhost:8080/unhate/${song.artist_id}/${sessionStorage.getItem('username')}`)
+            .then(setHated(''))
+            .catch(err => console.error(err));
         else
             axios.post(`http://localhost:8080/hate/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
+            .then(setHated('hated'))
+            .catch(err => console.error(err));
     }
     
     if (show && song !== crap)
@@ -92,13 +101,13 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
             <div className="song-contents">
                 <span className="song-filterer"></span>
                 <span className="song-info">
-                    <p>{song.song_name}</p>
-                    <p>{artist.artist_name}</p>
-                    <p>{subgenre ? subgenre.subgenre_name : genre.genre_name}</p>
+                    <p>{song && song.song_name}</p>
+                    <p>{artist && artist.artist_name}</p>
+                    <p>{subgenre ? subgenre.subgenre_name : genre && genre.genre_name}</p>
                 </span>
                 <span className="song-filterer">
-                    <img src={like} onClick={() => handleLike()} alt="like" />
-                    <img src={hate} onClick={() => handleHate()} alt="hate" />
+                    <img className={liked} src={like} onClick={() => handleLike()} alt="like" />
+                    <img className={hated} src={hate} onClick={() => handleHate()} alt="hate" />
                 </span>
             </div>
             <MusicPlayer song={song.song_name} />
