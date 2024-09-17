@@ -8,6 +8,7 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [songs, setSongs] = useState([]);
     const [curatedSongs, setCuratedSongs] = useState([]);
     const [famGenreSongs, setFamGenreSongs] = useState([]);
+    const [filteredSongs, setFilteredSongs] = useState([]);
     const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -17,12 +18,13 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const handleFilter = () => {
         setFiltered(!filtered);
         setFilterBtnText(filtered ? 'Show only like music' : 'Show all music');
+        filterSongs(setFamGenreSongs);
     }
 
     const setArray = (location, action) => {
         axios.get(location)
             .then(response => {action(response.data)
-                console.log(location, response.data)
+                // console.log(location, response.data)
             })
             .catch(err => console.error(err));
     }
@@ -31,15 +33,26 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         const similar = [];
         bangers.forEach(banger => {
             // curatedSongs.map(song => similar.push(song));
-            songs.map(song => {
+            songs.filter(song => {
                 if (song.genre_id === banger.genre_id ||
                     song.genre_id === banger.inspiration_id
                 ) {
+                    // if (banger.artist_id === song.artist_id) console.log(song);
                     similar.push(song);
                 }
             })
         });
         setFamGenreSongs(similar);
+        const famGenreFilter = [];
+        const curatedFilter = [];
+        famGenreSongs.filter(song => {
+            if (!famGenreFilter.includes(song)) famGenreFilter.push(song);
+        })
+        setFilteredSongs(famGenreFilter);
+        curatedSongs.filter(song => {
+            if (!curatedFilter.includes(song)) curatedFilter.push(song);
+        })
+        setCuratedSongs(curatedFilter);
     }
 
     useEffect(() => {
@@ -53,12 +66,11 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         else
             filterSongs();
         setLoading(false);
-    }, [songs.length === 0, famGenreSongs.length === 0]);
+    }, [loading]);
     if (!loading) return <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
-                {famGenreSongs.length > 0
-                ? famGenreSongs.map(song => {
+                {filteredSongs.map(song => {
                     return <Song 
                         song={song} 
                         url={url} 
@@ -66,16 +78,7 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
                         genreChoice={genreChoice} 
                         secondChoice={secondChoice}
                     />
-                })
-            : curatedSongs.map(song => {
-                return <Song 
-                    song={song} 
-                    url={url} 
-                    filtered={filtered} 
-                    genreChoice={genreChoice} 
-                    secondChoice={secondChoice}
-                />
-            })}
+                })}
             </article>
             <button className="butt-filter" onClick={() => handleFilter()}>{filterBtnText}</button>
         </div>
