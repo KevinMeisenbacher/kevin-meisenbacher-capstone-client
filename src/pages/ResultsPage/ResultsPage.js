@@ -23,9 +23,7 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
 
     const setArray = (location, action) => {
         axios.get(location)
-            .then(response => {action(response.data)
-                // console.log(location, response.data)
-            })
+            .then(response => {action(response.data)})
             .catch(err => console.error(err));
     }
 
@@ -65,12 +63,15 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
             console.log('famGenreSongs', famGenreSongs);
         else
             filterSongs();
+        handleFilter();
         setLoading(false);
     }, [loading]);
-    if (!loading) return <div className="results-page">
+    
+    return <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
-                {filteredSongs.map(song => {
+            {filteredSongs.length > 0
+                ? filteredSongs.map(song => {
                     return <Song 
                         song={song} 
                         url={url} 
@@ -78,9 +79,23 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
                         genreChoice={genreChoice} 
                         secondChoice={secondChoice}
                     />
-                })}
+                })
+            : curatedSongs.map(song => {
+                return <Song 
+                    song={song} 
+                    url={url} 
+                    filtered={filtered} 
+                    genreChoice={genreChoice} 
+                    secondChoice={secondChoice}
+                />
+            })}
             </article>
-            <button className="butt-filter" onClick={() => handleFilter()}>{filterBtnText}</button>
+            <button className="butt-filter" 
+                onClick={() => handleFilter()}
+                onLoad={() => handleFilter()}
+            >
+                {filterBtnText}
+            </button>
         </div>
         <article className='options-box'>
             <Link to='/selection'><h1>Refine Results</h1></Link>

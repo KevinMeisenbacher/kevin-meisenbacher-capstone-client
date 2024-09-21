@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import './Song.scss';
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
+import { useLocation } from "react-router-dom";
 
 // Images
 import like from '../../assets/img/banger.png';
@@ -17,6 +18,7 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     const [crap, setCrap] = useState({});
     const [liked, setLiked] = useState('');
     const [hated, setHated] = useState('');
+    const location = useLocation();
 
     const setItem = (location, action) => {
         axios.get(location)
@@ -52,27 +54,24 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
         
         markSong('bangers', setBanger);
         markSong('crap', setCrap);
-
-        if (song.artist_id === banger.artist_id) setRelated(song);
-        else setRelated({});
         
         if (subgenre) {
             if (secondChoice) {
-                if (subgenre.inspiration_id === secondChoice.id)
+                if (subgenre.inspiration_id === genreChoice.id)
                     setRelated(song);
             }
             else if (!secondChoice) {
-                if (subgenre.inspiration_id === genreChoice.id)
+                if (song === banger)
                     setRelated(song);
             }
         }
         else setRelated({});
 
         setShow(filtered // If filtered, show related music if it's in a subgenre
-            ? liked
+            ? liked && !secondChoice || related.id > 0
             : genre
         );
-    }, [!subgenre, filtered, banger, crap]);
+    }, [!subgenre, filtered, banger, crap, show]);
 
     const handleLike = () => {
         if (song === banger)
