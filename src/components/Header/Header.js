@@ -34,6 +34,7 @@ const Header = () => {
           e.preventDefault();
           setSigningUp(false);
           setLoggingIn(!loggingIn);
+          console.log(loggingIn);
           location.pathname = loggingIn ? '/' : '/login';
       }
     }
@@ -88,8 +89,7 @@ const Header = () => {
                 setSignedUp={setSignedUp} 
                 setSignupText={setSignupText}
             />
-            <Link to='/login'>
-              <SignIn 
+              {loggingIn && <SignIn 
                   loggedIn={loggedIn}
                   setLoggedIn={setLoggedIn} 
                   setLoggingIn={setLoggingIn}
@@ -99,8 +99,7 @@ const Header = () => {
                   setLoading={setLoading}
                   display={display}
                   setDisplay={setDisplay}
-              />
-            </Link>
+              />}
         </section>
         </aside>
     </header>

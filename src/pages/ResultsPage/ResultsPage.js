@@ -12,13 +12,16 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [ready, setReady] = useState(false);
     const [filterBtnText, setFilterBtnText] = useState('Show only like music');
     const { id1, id2 } = useParams();
     
     const handleFilter = () => {
+        setReady(false);
         setFiltered(!filtered);
         setFilterBtnText(filtered ? 'Show only like music' : 'Show all music');
         filterSongs(setFamGenreSongs);
+        setReady(true);
     }
 
     const setArray = (location, action) => {
@@ -32,9 +35,10 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         bangers.forEach(banger => {
             // curatedSongs.map(song => similar.push(song));
             songs.filter(song => {
+                console.log('banger', banger);
+                console.log('song', song);
                 if (song.genre_id === banger.genre_id ||
-                    song.genre_id === banger.inspiration_id
-                ) {
+                    song.genre_id === banger.inspiration_id) {
                     // if (banger.artist_id === song.artist_id) console.log(song);
                     similar.push(song);
                 }
@@ -42,15 +46,13 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         });
         setFamGenreSongs(similar);
         const famGenreFilter = [];
-        const curatedFilter = [];
+        curatedSongs.filter(song => {
+            if (!famGenreFilter.includes(song)) famGenreFilter.push(song);
+        });
         famGenreSongs.filter(song => {
             if (!famGenreFilter.includes(song)) famGenreFilter.push(song);
-        })
+        });
         setFilteredSongs(famGenreFilter);
-        curatedSongs.filter(song => {
-            if (!curatedFilter.includes(song)) curatedFilter.push(song);
-        })
-        setCuratedSongs(curatedFilter);
     }
 
     useEffect(() => {
@@ -65,7 +67,7 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
             filterSongs();
         handleFilter();
         setLoading(false);
-    }, [loading]);
+    }, [loading, !ready]);
     
     return <div className="results-page">
         <div className='results-side'>

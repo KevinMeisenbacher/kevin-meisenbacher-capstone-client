@@ -57,7 +57,8 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
         
         if (subgenre) {
             if (secondChoice) {
-                if (subgenre.inspiration_id === genreChoice.id)
+                if (subgenre.inspiration_id === genreChoice.id ||
+                    subgenre.inspiration_id === secondChoice.id)
                     setRelated(song);
             }
             else if (!secondChoice) {
@@ -79,7 +80,7 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
             .then(setLiked(''))
             .catch(err => console.error(err));
         else
-            axios.post(`http://localhost:8080/like/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
+            axios.post(`http://localhost:8080/like/${song.artist_id}/${song.genre_id}/${subgenre.inspiration_id}/${sessionStorage.getItem('username')}`)
             .then(setLiked('liked'))
             .catch(err => console.error(err));
     }
@@ -105,8 +106,8 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
                     <p>{subgenre ? subgenre.subgenre_name : genre && genre.genre_name}</p>
                 </span>
                 <span className="song-filterer">
-                    <img className={liked} src={like} onClick={() => handleLike()} alt="like" />
-                    <img className={hated} src={hate} onClick={() => handleHate()} alt="hate" />
+                    {sessionStorage.getItem('username') && <img className={liked} src={like} onClick={() => handleLike()} alt="like" />}
+                    {sessionStorage.getItem('username') && <img className={hated} src={hate} onClick={() => handleHate()} alt="hate" />}
                 </span>
             </div>
             <MusicPlayer song={song.song_name} />

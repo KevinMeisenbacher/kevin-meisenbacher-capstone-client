@@ -21,7 +21,6 @@ const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, 
     const login = () => {
         axios.post('http://localhost:8080/signin', formValues)
         .then(response => {
-            console.log(response.data);
             sessionStorage.setItem("JWTtoken", response.data.token);
             setToken(response.data.token);
         })
@@ -40,10 +39,8 @@ const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, 
         login();
     }
 
-    const location = useLocation();
-
     const renderForm = () => {
-        if (location.pathname.includes('login')) return (
+        return (
             <form className={`form form--signin`} >
                 <div className='input-field--signin'>
                     <span></span> <h3>Log In</h3>
@@ -62,7 +59,6 @@ const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, 
                 </div>
             </form>
         );
-        else return <></>;
     }
 
     return renderForm();
