@@ -74,6 +74,19 @@ h3 {
             margin-bottom: 30px; 
         }
     }
+
+    &__container {
+        position: relative;
+        display: block;
+    }
+
+    &__error {
+        position: absolute;
+        left: 0;
+        top: 24px;
+        font-size: small;
+        color: red;
+    }
 }
 
 .butt {

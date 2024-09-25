@@ -28,6 +28,7 @@ const Header = () => {
           sessionStorage.setItem('JWTtoken', '');
           setToken(null);
           setLoginText('Log In');
+          sessionStorage.clear();
           setLoggingOut(false);
       }
       else {
