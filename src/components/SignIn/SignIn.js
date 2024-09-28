@@ -28,7 +28,6 @@ const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, 
         .then(setLoggingIn(false))
         .then(setDisplay('none'))
         .then(setLoginText('Log Out'))
-        .then(navigate('/'))
         .then(setLoading(false))
         .then(console.log('loading', loading))
         .catch(err => console.error(err));
