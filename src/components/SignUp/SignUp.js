@@ -19,19 +19,71 @@ const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
         phone: ''
     });
 
+    const validatePassword = (value, passErrorString) => {
+        const lowerRegex = new RegExp('[a-z]+');
+        const upperRegex = new RegExp('[A-Z]+');
+        const numRegex = new RegExp('[\\d]+');
+        const symRegex = new RegExp('[\\W]+');
+
+        const lowerTest = lowerRegex.test(value) ? '' : 'a-z ';
+        const upperTest = upperRegex.test(value) ? '' : 'A-Z ';
+        const numTest = numRegex.test(value) ? '' : '0-9 ';
+        const symTest = symRegex.test(value) ? '' : '!@#$%^&*()';
+
+        passErrorString = `${lowerTest} ${upperTest} ${numTest} ${symTest}`;
+        console.log(passErrorString);
+        return passErrorString;
+    }
+
+    const validateEmail = (value, emailErrorString) => { // Got regex from https://emailvalidation.io/blog/regex-email-validation/#:~:text=In%20order%20to%20check%20whether%20an%20email%20address%20is%20valid
+        const regex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/);
+        emailErrorString = regex.test(value) ? '' : 'something@email.something';
+        return emailErrorString;
+    }
+
+    const validatePhone = (value, phoneErrorString) => {
+        const regex = new RegExp(/0-9{10}/);
+        phoneErrorString = regex.test(value) ? '' : `${value.length}/10 digits`
+        return phoneErrorString;
+    }
+
     const handleForm = (e) => {
         const {value, name} = e.target;
-        console.log(value);
         setFormValues({...formValues, [name]: value});
-        setErrors({...errors, [name]: value.length > 0
-            ? '' : `Missing value for ${name}`
+
+        let nameError = '';
+        let passError = '';
+        let confirmPassError = '';
+        let emailError = '';
+        let phoneError = '';
+
+        if (name === 'username') nameError = value.length > 2
+            ? '' : 'Enter a unique name';
+        
+        let passErrorString = '';
+        if (name === 'password') passError = validatePassword(value);
+
+        if (name === 'confirmPassword') 
+            confirmPassError = value === formValues.password
+            ? '' : 'Passwords must match';
+
+        let emailErrorString = '';
+        if (name === 'email') emailError = validateEmail(value);
+
+        let phoneErrorString = '';
+        if (name === 'phone') phoneError = validatePhone(value);
+
+        setErrors({
+            username: nameError,
+            password: passError,
+            confirmPassword: confirmPassError,
+            email: emailError,
+            phone: phoneError
         });
 
-        // const { username, password, confirmPassword, email, phone} = formValues;
-        // if (username && password && confirmPassword === password && email && phone)
-        //     setFormValues(formValues);
-        // else return;
+        console.log(errors);
     }
+
     const location = useLocation();
 
     const handleSignup = (e) => {
