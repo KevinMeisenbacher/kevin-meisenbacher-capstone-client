@@ -8,16 +8,9 @@ const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
         username: '',
         password: '',
         confirmPassword: '',
-        email: '',
-        phone: ''
+        email: ''
     });
-    const [errors, setErrors] = useState({
-        username: '',
-        password: '',
-        confirmPassword: '',
-        email: '',
-        phone: ''
-    });
+    const [errors, setErrors] = useState({});
 
     const validatePassword = (value, passErrorString) => {
         const lowerRegex = new RegExp('[a-z]+');
@@ -31,7 +24,6 @@ const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
         const symTest = symRegex.test(value) ? '' : '!@#$%^&*()';
 
         passErrorString = `${lowerTest} ${upperTest} ${numTest} ${symTest}`;
-        console.log(passErrorString);
         return passErrorString;
     }
 
@@ -39,12 +31,6 @@ const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
         const regex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/);
         emailErrorString = regex.test(value) ? '' : 'something@email.something';
         return emailErrorString;
-    }
-
-    const validatePhone = (value, phoneErrorString) => {
-        const regex = new RegExp(/0-9{10}/);
-        phoneErrorString = regex.test(value) ? '' : `${value.length}/10 digits`
-        return phoneErrorString;
     }
 
     const handleForm = (e) => {
@@ -55,51 +41,44 @@ const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
         let passError = '';
         let confirmPassError = '';
         let emailError = '';
-        let phoneError = '';
 
         if (name === 'username') nameError = value.length > 2
             ? '' : 'Enter a unique name';
         
-        let passErrorString = '';
         if (name === 'password') passError = validatePassword(value);
 
         if (name === 'confirmPassword') 
             confirmPassError = value === formValues.password
             ? '' : 'Passwords must match';
 
-        let emailErrorString = '';
         if (name === 'email') emailError = validateEmail(value);
-
-        let phoneErrorString = '';
-        if (name === 'phone') phoneError = validatePhone(value);
 
         setErrors({
             username: nameError,
             password: passError,
             confirmPassword: confirmPassError,
-            email: emailError,
-            phone: phoneError
+            email: emailError
         });
-
-        console.log(errors);
     }
 
     const location = useLocation();
 
     const handleSignup = (e) => {
         e.preventDefault();
-        console.log(formValues);
-        console.error(errors && errors);
 
-        if (errors) return;
-        else axios.post('http://localhost:8080/signup', formValues)
-        .then(response => console.log(response.data))
-        .then(setSignedUp(true))
-        .then(setSignupText(signedUp
-            ? 'Account'
-            : 'Sign Up'
-        ))
-        .catch(err => console.error(err));
+        const { username, password, confirmPassword, email } = errors;
+        if (username.includes('') && password.includes('') && confirmPassword.includes('') && email.includes(''))
+            axios.post('http://localhost:8080/signup', formValues)
+            .then(response => console.log(response.data))
+            .then(setSignedUp(true))
+            .then(setSignupText(signedUp
+                ? 'Account'
+                : 'Sign Up'
+            ))
+            .catch(err => console.error(err));
+        else {
+            return;
+        }
     }
     if (location.pathname.includes('signup')) return (
         <form className='form form--signup' onSubmit={e => handleSignup(e)}>
@@ -133,13 +112,6 @@ const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
                 <div className='input-field__container'>
                     <input type="email" name="email" onChange={email => {handleForm(email)}} /> 
                     <span className='input-field__error'>{errors.email}</span>
-                </div>
-            </div>
-            <div className='input-field--signup'>
-            <span>Phone</span> 
-                <div className='input-field__container'>
-                    <input type="tel" name="phone" onChange={phone => {handleForm(phone)}} /> 
-                    <span className='input-field__error'>{errors.phone}</span>
                 </div>
             </div>
             <div className='input-field--signup'>
