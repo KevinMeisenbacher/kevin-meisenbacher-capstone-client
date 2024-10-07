@@ -36,7 +36,7 @@ const SelectionPage = ({
                 <button className='butt-nav'>back</button>
             </Link>
             <Link to={
-                `/results/${genreChoice && genreChoice.id}${secondChoice
+                `/results/${genreChoice > 0 && genreChoice.id}${secondChoice > 0
                     ? '/' + secondChoice.id
                     : ''
                 }`

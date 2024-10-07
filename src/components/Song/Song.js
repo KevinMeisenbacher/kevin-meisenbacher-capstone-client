@@ -12,13 +12,12 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
-    const [show, setShow] = useState(null);
+    const [show, setShow] = useState({});
     const [related, setRelated] = useState({});
     const [banger, setBanger] = useState({});
     const [crap, setCrap] = useState({});
     const [liked, setLiked] = useState('');
     const [hated, setHated] = useState('');
-    const location = useLocation();
 
     const setItem = (location, action) => {
         axios.get(location)
@@ -69,10 +68,10 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
         else setRelated({});
 
         setShow(filtered // If filtered, show related music if it's in a subgenre
-            ? liked && !secondChoice || related.id > 0
+            ? liked || related.id > 0
             : genre
         );
-    }, [!subgenre, filtered, banger, crap, show]);
+    }, [filtered]);
 
     const handleLike = () => {
         if (song === banger)

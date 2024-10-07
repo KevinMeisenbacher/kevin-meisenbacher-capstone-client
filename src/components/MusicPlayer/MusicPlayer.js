@@ -21,15 +21,10 @@ const MusicPlayer = ({ song }) => {
 
   const [seconds, setSeconds] = useState(); // current position of the audio in seconds
 
-  // Play that funky music
+  // Play/Pause
   const playingButton = () => {
-      if (isPlaying) {
-        pause(); // this will pause the audio
-        setIsPlaying(false);
-      } else {
-        play(); // this will play the audio
-        setIsPlaying(true);
-      }
+        setIsPlaying(!isPlaying);
+        isPlaying ? pause() : play();
   };
 
   const sec = duration / 1000;
@@ -58,19 +53,14 @@ const MusicPlayer = ({ song }) => {
 
     return (
         <div className="component">
-            {!isPlaying ? (
               <button className="playButton" onClick={playingButton}>
                 <IconContext.Provider value={{ size: "3em", color: "#27AE60" }}>
-                  <AiFillPlayCircle />
+                  {isPlaying 
+                    ? <AiFillPauseCircle /> 
+                    : <AiFillPlayCircle />
+                  }
                 </IconContext.Provider>
               </button>
-            ) : (
-              <button className="playButton" onClick={playingButton}>
-                <IconContext.Provider value={{ size: "3em", color: "#27AE60" }}>
-                  <AiFillPauseCircle />
-                </IconContext.Provider>
-              </button>
-            )}
 
             <div className="time">
                 <p>

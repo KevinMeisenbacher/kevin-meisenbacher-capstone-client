@@ -10,8 +10,8 @@ import ResultsPage from './pages/ResultsPage/ResultsPage';
 function App() {
   const url = 'http://localhost:8080';
   const [selected, setSelected] = useState(false); // Page 1 choice
-  const [genreChoice, setGenreChoice] = useState(null); // Page 2 choice
-  const [secondChoice, setSecondChoice] = useState(null); // Page 2 alt choice
+  const [genreChoice, setGenreChoice] = useState(0); // Page 2 choice
+  const [secondChoice, setSecondChoice] = useState(0); // Page 2 alt choice
 
   const famGenre = <ResultsPage 
     url={url}

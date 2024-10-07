@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './ResultsPage.scss';
 import Song from '../../components/Song/Song';
 import { Link, useParams } from 'react-router-dom';
@@ -12,16 +12,13 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
     const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [ready, setReady] = useState(false);
     const [filterBtnText, setFilterBtnText] = useState('Show only like music');
     const { id1, id2 } = useParams();
     
     const handleFilter = () => {
-        setReady(false);
         setFiltered(!filtered);
         setFilterBtnText(filtered ? 'Show only like music' : 'Show all music');
         filterSongs(setFamGenreSongs);
-        setReady(true);
     }
 
     const setArray = (location, action) => {
@@ -30,46 +27,39 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
             .catch(err => console.error(err));
     }
 
-    const filterSongs = () => {
+    const filterSongs = useCallback(() => {
         const similar = [];
         bangers.forEach(banger => {
-            // curatedSongs.map(song => similar.push(song));
-            songs.filter(song => {
-                console.log('banger', banger);
-                console.log('song', song);
+            songs.forEach(song => {
                 if (song.genre_id === banger.genre_id ||
                     song.genre_id === banger.inspiration_id) {
-                    // if (banger.artist_id === song.artist_id) console.log(song);
                     similar.push(song);
                 }
             })
         });
-        setFamGenreSongs(similar);
-        const famGenreFilter = [];
-        curatedSongs.filter(song => {
-            if (!famGenreFilter.includes(song)) famGenreFilter.push(song);
-        });
-        famGenreSongs.filter(song => {
-            if (!famGenreFilter.includes(song)) famGenreFilter.push(song);
-        });
-        setFilteredSongs(famGenreFilter);
-    }
+        if (JSON.stringify(similar) !== JSON.stringify(filteredSongs))
+            setFilteredSongs(similar);
+    }, [bangers, songs, filteredSongs]);
 
     useEffect(() => {
-        setArray(`${url}/songs`, setSongs);
-        setArray(`${url}/songs/${genreChoice && id1}/${secondChoice && id2}`, setCuratedSongs);
-        setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers);
-        if (songs.length > 0)
+        setLoading(true);
+        Promise.all([
+            setArray(`${url}/songs`, setSongs),
+            setArray(`${url}/songs/${genreChoice > 0 && id1}/${secondChoice > 0 && id2}`, setCuratedSongs),
+            setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers)
+        ])
+        .catch(err => console.error('Error fetching data', err))
+        .finally(setLoading(false));
+    }, [!songs])
+
+    useEffect(() => {
+        if (songs.length > 0 && bangers.length > 0) 
             filterSongs();
-        if (famGenreSongs.length > 0) 
-            console.log('famGenreSongs', famGenreSongs);
-        else
-            filterSongs();
-        handleFilter();
-        setLoading(false);
-    }, [loading, !ready]);
+    }, [filterSongs]);
     
-    return <div className="results-page">
+    return loading 
+    ? <h1>Loading...</h1> 
+    : <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
             {filteredSongs.length > 0
