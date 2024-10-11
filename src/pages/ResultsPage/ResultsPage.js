@@ -56,31 +56,30 @@ const ResultsPage = ({ url, genreChoice, secondChoice }) => {
         if (songs.length > 0 && bangers.length > 0) 
             filterSongs();
     }, [filterSongs]);
+
+    // Filtering renderer downstairs will return this exact thing
+    // with different respective values
+    const renderSongs = (songs) => {
+        return songs.map(song => (
+            <Song 
+                key={song.id}
+                song={song} 
+                url={url} 
+                filtered={filtered} 
+                genreChoice={genreChoice} 
+                secondChoice={secondChoice}
+            />
+        ))
+    }
     
     return loading 
     ? <h1>Loading...</h1> 
     : <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
-            {filteredSongs.length > 0
-                ? filteredSongs.map(song => {
-                    return <Song 
-                        song={song} 
-                        url={url} 
-                        filtered={filtered} 
-                        genreChoice={genreChoice} 
-                        secondChoice={secondChoice}
-                    />
-                })
-            : curatedSongs.map(song => {
-                return <Song 
-                    song={song} 
-                    url={url} 
-                    filtered={filtered} 
-                    genreChoice={genreChoice} 
-                    secondChoice={secondChoice}
-                />
-            })}
+                {filteredSongs.length > 0
+                ? renderSongs(filteredSongs)
+                : renderSongs(curatedSongs || [])}
             </article>
             <button className="butt-filter" 
                 onClick={() => handleFilter()}

@@ -10,17 +10,15 @@ const ContentSection = ({ genres, header, choiceList, setGenreChoice }) => {
         </article>
         <article className='content-box'>
             {genres.map(genre => {
-                return <>
-                    <label className='content-box__item'>
-                        <input 
-                            key={genre.id}
-                            type="radio" 
-                            name={choiceList}
-                            value={genre.genre_name} 
-                            onClick={() => selectGenre(genre)}
-                        />{genre.genre_name}
-                    </label>
-                </>
+                return <label key={genre.id}
+                className='content-box__item'>
+                    <input 
+                        type="radio" 
+                        name={choiceList}
+                        value={genre.genre_name} 
+                        onClick={() => selectGenre(genre)}
+                    />{genre.genre_name}
+                </label>
             })}
         </article>
     </section>

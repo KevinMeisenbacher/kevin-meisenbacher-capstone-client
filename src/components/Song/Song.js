@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from 'axios';
 import './Song.scss';
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
@@ -37,13 +37,20 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
                 }
             }
 
-            if (song === banger) setLiked('liked');
-            else setLiked('');
-            if (song === crap) setHated('hated');
-            else setHated('');
+            setLiked(song === banger ? 'liked' : '');
+            setHated(song === crap ? 'hated' : '');
         })
         .catch(err => console.error(err));
     }
+
+    const handleAction = useCallback((choice, location, state, method) => {
+        const action = song === state
+            ? `un${choice}` : choice;
+            
+        axios.post(`http://localhost:8080/${action}/${song.artist_id}/${sessionStorage.getItem('username')}`)
+            .then(markSong(location, method))
+            .catch(err => console.error(err));
+    }, [song, banger, setBanger, crap, setCrap]);
     
     // Fetch the API to get all necessary data for the song
     useEffect(() => {
@@ -53,6 +60,7 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
         
         markSong('bangers', setBanger);
         markSong('crap', setCrap);
+        if (song === banger) console.log(song);
         
         if (subgenre) {
             if (secondChoice) {
@@ -71,29 +79,7 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
             ? liked || related.id > 0
             : genre
         );
-    }, [filtered]);
-
-    const handleLike = () => {
-        if (song === banger)
-            axios.post(`http://localhost:8080/unlike/${song.artist_id}/${sessionStorage.getItem('username')}`)
-            .then(setLiked(''))
-            .catch(err => console.error(err));
-        else
-            axios.post(`http://localhost:8080/like/${song.artist_id}/${song.genre_id}/${subgenre.inspiration_id}/${sessionStorage.getItem('username')}`)
-            .then(setLiked('liked'))
-            .catch(err => console.error(err));
-    }
-
-    const handleHate = () => {
-        if (song === crap)
-            axios.post(`http://localhost:8080/unhate/${song.artist_id}/${sessionStorage.getItem('username')}`)
-            .then(setHated(''))
-            .catch(err => console.error(err));
-        else
-            axios.post(`http://localhost:8080/hate/${song.artist_id}/${song.genre_id}/${sessionStorage.getItem('username')}`)
-            .then(setHated('hated'))
-            .catch(err => console.error(err));
-    }
+    }, [filtered, handleAction]);
     
     if (show && song !== crap)
         return (<div className="song">
@@ -105,8 +91,20 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
                     <p>{subgenre ? subgenre.subgenre_name : genre && genre.genre_name}</p>
                 </span>
                 <span className="song-filterer">
-                    {sessionStorage.getItem('username') && <img className={liked} src={like} onClick={() => handleLike()} alt="like" />}
-                    {sessionStorage.getItem('username') && <img className={hated} src={hate} onClick={() => handleHate()} alt="hate" />}
+                    {sessionStorage.getItem('username') 
+                    && <img 
+                        className={liked} 
+                        src={like} 
+                        onClick={() => handleAction('like', 'bangers', banger, setBanger)} 
+                        alt="like" 
+                    />}
+                    {sessionStorage.getItem('username') 
+                    && <img 
+                        className={hated} 
+                        src={hate} 
+                        onClick={() => handleAction('hate', 'crap', crap, setCrap)} 
+                        alt="hate" 
+                    />}
                 </span>
             </div>
             <MusicPlayer song={song.song_name} />

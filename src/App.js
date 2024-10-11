@@ -13,14 +13,7 @@ function App() {
   const [genreChoice, setGenreChoice] = useState(0); // Page 2 choice
   const [secondChoice, setSecondChoice] = useState(0); // Page 2 alt choice
 
-  const famGenre = <ResultsPage 
-    url={url}
-    selected={selected}
-    genreChoice={genreChoice}
-    secondChoice={secondChoice}
-  />
-
-  const newGenre = <ResultsPage 
+  const element = <ResultsPage 
     url={url}
     selected={selected}
     genreChoice={genreChoice}
@@ -42,8 +35,8 @@ function App() {
               setGenreChoice={setGenreChoice}
               secondChoice={secondChoice}
               setSecondChoice={setSecondChoice}/>} />
-            <Route path='/results/:id1' element={famGenre} />
-            <Route path='/results/:id1/:id2' element={newGenre} />
+            <Route path='/results/:id1' element={element} />
+            <Route path='/results/:id1/:id2' element={element} />
         </Routes>
       </BrowserRouter>
     </main>
