@@ -19,16 +19,16 @@ const SelectionPage = ({
         <div className='content'>
             {selected === 'a' && <ContentSection 
                 genres={genres}
+                setGenreChoice={setGenreChoice}
                 header='What genres are you trying to get into?'
-                choiceList='curiosity'
-                genreChoice={secondChoice}
-                setGenreChoice={setSecondChoice} />}
+                choiceList='curiosity' 
+            />}
             <ContentSection 
                 genres={genres}
+                genreChoice={secondChoice}
+                setGenreChoice={setSecondChoice}
                 header='What music do you currently listen to?'
                 choiceList='preference'
-                genreChoice={genreChoice}
-                setGenreChoice={setGenreChoice} 
             />
         </div>
         <div className='navimagation-buttons'>
@@ -36,8 +36,8 @@ const SelectionPage = ({
                 <button className='butt-nav'>back</button>
             </Link>
             <Link to={
-                `/results/${genreChoice > 0 && genreChoice.id}${secondChoice > 0
-                    ? '/' + secondChoice.id
+                `/results/${genreChoice}${secondChoice > 0
+                    ? '/' + secondChoice
                     : ''
                 }`
             }>

@@ -8,17 +8,16 @@ import { useLocation } from "react-router-dom";
 import like from '../../assets/img/banger.png';
 import hate from '../../assets/img/poop.png';
 
-const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
+const Song = ({ song, url }) => {
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
-    const [show, setShow] = useState({});
-    const [related, setRelated] = useState({});
     const [banger, setBanger] = useState({});
     const [crap, setCrap] = useState({});
     const [liked, setLiked] = useState('');
     const [hated, setHated] = useState('');
 
+    // Set a specific object respective to the current song
     const setItem = (location, action) => {
         axios.get(location)
             .then(response => action(response.data[0]))
@@ -43,6 +42,7 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
         .catch(err => console.error(err));
     }
 
+    // Handle like/unlike or hate/unhate depending on which button is clicked
     const handleAction = useCallback((choice, location, state, method) => {
         const action = song === state
             ? `un${choice}` : choice;
@@ -54,34 +54,17 @@ const Song = ({ song, url, genreChoice, secondChoice, filtered }) => {
     
     // Fetch the API to get all necessary data for the song
     useEffect(() => {
-        setItem(`${url}/artists/${song.artist_id}`, setArtist);
-        setItem(`${url}/genres/${song.genre_id}`, setGenre);
-        setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre);
+        Promise.all([
+            setItem(`${url}/artists/${song.artist_id}`, setArtist),
+            setItem(`${url}/genres/${song.genre_id}`, setGenre),
+            setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre)
+        ]);
         
         markSong('bangers', setBanger);
         markSong('crap', setCrap);
-        if (song === banger) console.log(song);
-        
-        if (subgenre) {
-            if (secondChoice) {
-                if (subgenre.inspiration_id === genreChoice.id ||
-                    subgenre.inspiration_id === secondChoice.id)
-                    setRelated(song);
-            }
-            else if (!secondChoice) {
-                if (song === banger)
-                    setRelated(song);
-            }
-        }
-        else setRelated({});
-
-        setShow(filtered // If filtered, show related music if it's in a subgenre
-            ? liked || related.id > 0
-            : genre
-        );
-    }, [filtered, handleAction]);
+    }, [handleAction]);
     
-    if (show && song !== crap)
+    if (song !== crap)
         return (<div className="song">
             <div className="song-contents">
                 <span className="song-filterer"></span>

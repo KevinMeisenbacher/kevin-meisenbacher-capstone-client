@@ -1,8 +1,9 @@
 import './ContentSection.scss';
 
-const ContentSection = ({ genres, header, choiceList, setGenreChoice }) => {
+const ContentSection = ({ genres, header, choiceList, setGenreChoice, secondChoice, setSecondChoice }) => {
     const selectGenre = (genre) => {
-        setGenreChoice(genre);
+        setGenreChoice(genre.id);
+
     }
     return <section className='content-section'>
         <article className='content-header'>
