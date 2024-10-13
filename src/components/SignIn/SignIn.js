@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import axios from 'axios';
 import './SignIn.scss';
 
-const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, setToken, setDisplay, loading, setLoading }) => {
+const SignIn = ({ setToken }) => {
+    const [display, setDisplay] = useState('none');
+    const [loading, setLoading] = useState(true);
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
     });
-
-    const [user, setUser] = useState(null);
-    const navigate = useNavigate();
 
     const handleForm = (e) => {
         const {value, name} = e.target;
@@ -24,12 +22,8 @@ const SignIn = ({ loggedIn, setLoggedIn, loggingIn, setLoggingIn, setLoginText, 
             sessionStorage.setItem("JWTtoken", response.data.token);
             setToken(response.data.token);
         })
-        .then(setLoggedIn(true))
-        .then(setLoggingIn(false))
         .then(setDisplay('none'))
-        .then(setLoginText('Log Out'))
         .then(setLoading(false))
-        .then(console.log('loading', loading))
         .catch(err => console.error(err));
     }
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import ContentSection from '../../components/ContentSection/ContentSection';
+import ContentSection from './ContentSection';
 import './SelectionPage.scss';
 
 const SelectionPage = ({ 

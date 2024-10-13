@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.scss';
 
-const SignUp = ({ signedUp, setSignedUp, signingUp, setSignupText}) => {
+const SignUp = ({ signedUp, setSignedUp, setSignupText}) => {
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
