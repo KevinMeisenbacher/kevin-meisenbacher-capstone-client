@@ -20,7 +20,7 @@ const ResultsPage = ({ url }) => {
             bangers.some(banger => { // Show everything the user likes
                 if (song.genre_id === banger.genre_id ||
                     song.genre_id === banger.inspiration_id) {
-                    similar.push(song);
+                    if (curatedSongs.includes(song)) similar.push(song);
                 }
             });
             if (!similar.includes(song) && ( // Show all within selected genres
@@ -47,11 +47,9 @@ const ResultsPage = ({ url }) => {
     }
 
     useEffect(() => { // Initialize all the things!
-        setFocusedSongs([]);
         Promise.all([
             setArray(`${url}/songs`, setSongs),
             setArray(`${url}/songs/${id1}/${id2}`, setCuratedSongs),
-            setFocusedSongs(curatedSongs),
             setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers)
         ])
         .catch(err => console.error('Error fetching data', err))

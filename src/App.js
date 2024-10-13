@@ -9,14 +9,10 @@ import ResultsPage from './pages/ResultsPage/ResultsPage';
 function App() {
   const url = 'http://localhost:8080';
   const [selected, setSelected] = useState(false); // Page 1 choice
-  const [genreChoice, setGenreChoice] = useState(0); // Page 2 choice
-  const [secondChoice, setSecondChoice] = useState(0); // Page 2 alt choice
 
-  const element = <ResultsPage 
+  const results = <ResultsPage 
     url={url}
     selected={selected}
-    genreChoice={genreChoice}
-    secondChoice={secondChoice}
   />
 
   return (
@@ -29,13 +25,9 @@ function App() {
             setSelected={setSelected}/>} />
             <Route path='/selection' element={<SelectionPage 
               url={url}
-              selected={selected}
-              genreChoice={genreChoice}
-              setGenreChoice={setGenreChoice}
-              secondChoice={secondChoice}
-              setSecondChoice={setSecondChoice}/>} />
-            <Route path='/results/:id1' element={element} />
-            <Route path='/results/:id1/:id2' element={element} />
+              selected={selected}/>} />
+            <Route path='/results/:id1' element={results} />
+            <Route path='/results/:id1/:id2' element={results} />
         </Routes>
       </BrowserRouter>
     </main>
