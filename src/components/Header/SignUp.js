@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.scss';
 
-const SignUp = ({ signedUp, setSignedUp, setSignupText}) => {
+const SignUp = () => {
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
@@ -61,54 +60,44 @@ const SignUp = ({ signedUp, setSignedUp, setSignupText}) => {
         });
     }
 
-    const location = useLocation();
-
     const handleSignup = (e) => {
         e.preventDefault();
-
         const { username, password, confirmPassword, email } = errors;
+        
         if (username.includes('') && password.includes('') && confirmPassword.includes('') && email.includes(''))
             axios.post('http://localhost:8080/signup', formValues)
-            .then(response => console.log(response.data))
-            .then(setSignedUp(true))
-            .then(setSignupText(signedUp
-                ? 'Account'
-                : 'Sign Up'
-            ))
             .catch(err => console.error(err));
-        else {
+        else 
             return;
-        }
     }
-    if (location.pathname.includes('signup')) return (
+    return (
         <form className='form form--signup' onSubmit={e => handleSignup(e)}>
             <div className='input-field--signup'>
                 <span></span> <h3>Sign Up</h3>
             </div>
             <div className='input-field--signup'>
-            <span>Username</span> 
+                <span>Username</span> 
                 <div className='input-field__container'>
                     <input type="text" name="username" onChange={username => {handleForm(username)}} /> 
                     <span className='input-field__error'>{errors.username}</span>
                 </div>
- 
             </div>
             <div className='input-field--signup'>
-            <span>Password</span> 
+                <span>Password</span> 
                 <div className='input-field__container'>
                     <input type="password" name="password" onChange={password => {handleForm(password)}} /> 
                     <span className='input-field__error'>{errors.password}</span>
                 </div>
             </div>
             <div className='input-field--signup'>
-            <span>Confirm Password</span> 
+                <span>Confirm Password</span> 
                 <div className='input-field__container'>
                     <input type="password" name="confirmPassword" onChange={confirmPassword => {handleForm(confirmPassword)}} /> 
                     <span className='input-field__error'>{errors.confirmPassword}</span>
                 </div>
             </div>
             <div className='input-field--signup'>
-            <span>Email</span> 
+                <span>Email</span> 
                 <div className='input-field__container'>
                     <input type="email" name="email" onChange={email => {handleForm(email)}} /> 
                     <span className='input-field__error'>{errors.email}</span>

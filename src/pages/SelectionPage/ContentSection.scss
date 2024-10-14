@@ -1,0 +1,25 @@
+@use '../../partials/_variables' as *;
+@use '../../partials/_fonts' as *;
+@use '../../partials/_mixins' as *;
+
+.content {
+    &-section {
+        margin: 0 5px;
+    }
+    &-header {
+        background-color: $grey;
+        padding: 1px 10px;
+        @include page-2-breakpoints;
+        border-radius: 5px;
+    }
+    &-box {
+        @include content-box;
+        @include page-2-breakpoints;
+        border-radius: 5px;
+        background-color: $black;
+
+        &__item {
+            padding: 5px;
+        }
+    }
+}

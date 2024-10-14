@@ -2,8 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './SignIn.scss';
 
-const SignIn = ({ setToken }) => {
-    const [display, setDisplay] = useState('none');
+const SignIn = ({ setToken, setLoggingIn }) => {
     const [loading, setLoading] = useState(true);
     const [formValues, setFormValues] = useState({
         username: '',
@@ -22,13 +21,12 @@ const SignIn = ({ setToken }) => {
             sessionStorage.setItem("JWTtoken", response.data.token);
             setToken(response.data.token);
         })
-        .then(setDisplay('none'))
+        .then(setLoggingIn(false))
         .then(setLoading(false))
         .catch(err => console.error(err));
     }
 
-    const handleLogin = (e) => {
-        e.preventDefault();
+    const handleLogin = () => {
         login();
     }
 
@@ -48,7 +46,7 @@ const SignIn = ({ setToken }) => {
                 </div>
                 <div>
                     <span></span> 
-                    <button className='butt signin' onClick={e => handleLogin(e)}>Enter</button>
+                    <button className='butt signin' onClick={e => handleLogin()}>Enter</button>
                 </div>
             </form>
         );

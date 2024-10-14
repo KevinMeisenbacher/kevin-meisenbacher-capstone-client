@@ -96,6 +96,5 @@ img {
     @include laptop { width: 150px; }
     @include desktop { width: 174px; }
     padding: 5px;
-    // @include laptop { width: auto; }
     margin: 5px 10px;
 }

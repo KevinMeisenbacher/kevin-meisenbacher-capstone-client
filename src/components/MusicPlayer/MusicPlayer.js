@@ -9,9 +9,8 @@ import './MusicPlayer.scss';
 const MusicPlayer = ({ song }) => {
   // Play/pause
   const [isPlaying, setIsPlaying] = useState(false);
-  const selectedTrack = tunes.find(tune => tune && tune.songName.includes(song));
-  const defaultTrack = tunes.find(tune => tune && tune.songName.includes('Flames'));
-  const [play, { pause, duration, sound }] = useSound(selectedTrack ? selectedTrack.src : defaultTrack.src);
+  const track = tunes.find(tune => tune?.songName.includes(song || 'Flames'));
+  const [play, { pause, duration, sound }] = useSound(track?.src);
     
   // Timeline
   const [currTime, setCurrTime] = useState({
@@ -19,10 +18,10 @@ const MusicPlayer = ({ song }) => {
       sec: "",
   }); // current position of the audio in minutes and seconds
 
-  const [seconds, setSeconds] = useState(); // current position of the audio in seconds
+  const [seconds, setSeconds] = useState(0); // current position of the audio in seconds
 
   // Play/Pause
-  const playingButton = () => {
+  const playPause = () => {
         setIsPlaying(!isPlaying);
         isPlaying ? pause() : play();
   };
@@ -53,7 +52,7 @@ const MusicPlayer = ({ song }) => {
 
     return (
         <div className="component">
-              <button className="playButton" onClick={() => playingButton}>
+              <button className="playButton" onClick={() => playPause}>
                 <IconContext.Provider value={{ size: "3em", color: "#27AE60" }}>
                   {isPlaying 
                     ? <AiFillPauseCircle /> 
