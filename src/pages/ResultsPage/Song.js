@@ -21,7 +21,7 @@ const Song = ({ song, url }) => {
 
     // Set a specific object respective to the current song
     const setItem = (location, action) => {
-        axios.get(location)
+        return axios.get(location)
             .then(response => action(response.data[0]))
             .catch(err => console.error(err));
     }
@@ -50,7 +50,7 @@ const Song = ({ song, url }) => {
             ? `un${choice}` : choice;
             
         axios.post(`http://localhost:8080/${action}/${song.artist_id}/${sessionStorage.getItem('username')}`)
-            .then(markSong(location, method))
+            .then(() => markSong(location, method))
             .catch(err => console.error(err));
     }, [song, banger, setBanger, crap, setCrap]);
     
@@ -59,11 +59,9 @@ const Song = ({ song, url }) => {
         Promise.all([
             setItem(`${url}/artists/${song.artist_id}`, setArtist),
             setItem(`${url}/genres/${song.genre_id}`, setGenre),
-            setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre)
+            setItem(`${url}/subgenres/${artist.subgenre_id === undefined ? 0 : artist.subgenre_id}`, setSubgenre)
         ]);
-        markSong('bangers', setBanger);
-        markSong('crap', setCrap);
-    }, [handleAction]);
+    }, [setBanger, setCrap]);
     
     if (song !== crap)
         return (<div className="song">

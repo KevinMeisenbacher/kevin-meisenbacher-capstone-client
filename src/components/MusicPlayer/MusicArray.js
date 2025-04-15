@@ -67,7 +67,7 @@ import fight from '../../assets/tunes/Fight Fire With Fire.mp3';
 import battery from '../../assets/tunes/Battery.mp3';
 import evil from '../../assets/tunes/Invocation of the Apocalyptic Evil.mp3';
 import spirit from '../../assets/tunes/My Spirit Will Go On.mp3';
-import flames from '../../assets/tunes/Through the Fire and Flames.mp3';
+import flames from '../../assets/tunes/Through The Fire and Flames.mp3';
 
 export const tunes = [
     {songName: 'Almost Grown.mp3', src: grown},

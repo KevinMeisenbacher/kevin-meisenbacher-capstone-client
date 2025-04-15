@@ -49,7 +49,7 @@ const ResultsPage = ({ url }) => {
     useEffect(() => { // Initialize all the things!
         Promise.all([
             setArray(`${url}/songs`, setSongs),
-            setArray(`${url}/songs/${id1}/${id2}`, setCuratedSongs),
+            setArray(`${url}/songs/${id1}/${id2 || ''}`, setCuratedSongs),
             setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers)
         ])
         .catch(err => console.error('Error fetching data', err))
