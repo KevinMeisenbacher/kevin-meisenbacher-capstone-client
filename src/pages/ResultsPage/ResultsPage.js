@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import './ResultsPage.scss';
-import Song from './Song';
+import Song from '../../components/Song/Song';
 import { Link, useParams } from 'react-router-dom';
 
 const ResultsPage = ({ url }) => {

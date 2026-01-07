@@ -1,0 +1,20 @@
+@use '../../partials/_variables' as *;
+@use '../../partials/_fonts' as *;
+@use '../../partials/_mixins' as *;
+
+.song {
+    width: 80%;
+    padding: 5px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: $black;
+    & p { 
+        margin: 5px 0; 
+    }
+    text-align: center;
+}
+
+button {
+    @include btn;
+    font-size: 20px;
+}
