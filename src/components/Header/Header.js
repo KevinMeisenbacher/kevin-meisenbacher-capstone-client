@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Header.scss';
 import logo from '../../assets/img/logo.png';
@@ -17,19 +18,19 @@ const Header = () => {
 
     const handleLogin = () => {
       if (loggedIn) {
-          setToken('');
-          sessionStorage.clear();
-          setLoggedIn(false);
+        setToken('');
+        sessionStorage.clear();
+        setLoggedIn(false);
       }
       else {
-          setSigningUp(false);
-          setLoggingIn(!loggingIn);
+        setSigningUp(false);
+        setLoggingIn(!loggingIn);
       }
     }
 
     const handleSignup = () => {
-        setLoggingIn(false);
-        setSigningUp(!signingUp);
+      setLoggingIn(false);
+      setSigningUp(!signingUp);
     }
   
     useEffect(() => {
@@ -48,6 +49,7 @@ const Header = () => {
           sessionStorage.setItem('username', response.data.username);
           setLoggedIn(true);
           setLoggingIn(false);
+          setSigningUp(false);
           setToken(sessionStorage.getItem('JWTtoken'));
         } catch (error) {
           console.error(error);
@@ -58,14 +60,16 @@ const Header = () => {
     }, [token, loggedIn]); 
 
     return <header className='header'>
-      <img src={logo}></img>
+      <Link to='/'>
+        <img src={logo}></img>
+      </Link>
       <aside className='side-bar'>
       {token && <h3 className='profile-box'>
         {currentUser}
       </h3>}
       <section className='dashboard'>
         <span className="header-btns">
-          <button className='butt-header' onClick={(e) => handleLogin()}>
+          <button className='butt-header' onClick={() => handleLogin()}>
             {loggedIn ? 'Log Out' : 'Log In'}</button>
           <button className='butt-header' onClick={() => handleSignup()}>
             {signupText}</button>
@@ -76,7 +80,7 @@ const Header = () => {
             setSignupText={setSignupText}
         />
         {loggingIn && <SignIn 
-            setToken={setToken}
+          setToken={setToken}
         />}
       </section>
       </aside>

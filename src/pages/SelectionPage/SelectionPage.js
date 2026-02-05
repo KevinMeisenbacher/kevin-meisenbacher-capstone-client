@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import ContentSection from './ContentSection';
+import ContentSection from '../../components/ContentSection/ContentSection';
 import './SelectionPage.scss';
 
 const SelectionPage = ({ url, selected }) => {
@@ -35,7 +35,8 @@ const SelectionPage = ({ url, selected }) => {
             <Link to='/'>
                 <button className='butt-nav'>back</button>
             </Link>
-            <Link to={`/results${id1 > 0 ? `/${id1}` : ''}${id2 > 0 ? `/${id2}` : ''}`}>
+            <Link to={`/results/4/0`}>
+            {/* <Link to={`/results${id1 > 0 ? `/${id1}` : ''}${id2 > 0 ? `/${id2}` : ''}`}> */}
                 <button className='butt-nav'>next</button>
             </Link>
         </div>
