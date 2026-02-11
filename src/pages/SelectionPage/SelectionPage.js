@@ -35,8 +35,7 @@ const SelectionPage = ({ url, selected }) => {
             <Link to='/'>
                 <button className='butt-nav'>back</button>
             </Link>
-            <Link to={`/results/4/0`}>
-            {/* <Link to={`/results${id1 > 0 ? `/${id1}` : ''}${id2 > 0 ? `/${id2}` : ''}`}> */}
+            <Link to={`/results/${id1.id}/${id2.id}`}>
                 <button className='butt-nav'>next</button>
             </Link>
         </div>

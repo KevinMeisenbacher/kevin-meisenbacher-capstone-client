@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Header.scss';
 import logo from '../../assets/img/logo.png';
-import SignUp from '../SignUp/SignUp';
-import SignIn from '../SignIn/SignIn';
+import SignUp from './SignUp';
+import SignIn from './SignIn';
 
 const Header = () => {
     const [loggingIn, setLoggingIn] = useState(false);

@@ -1,84 +1,117 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from 'axios';
 import './Song.scss';
+import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
+import SignIn from "../../components/Header/SignIn";
 
-const Song = ({ song, url, filtered }) => {
-    const [artist, setArtist] = useState(null);
-    const [genre, setGenre] = useState(null);
-    const [subgenre, setSubgenre] = useState(null);
+// Images
+import like from '../../assets/img/banger.png';
+import hate from '../../assets/img/poop.png';
+
+const Song = ({ song, url, filtered, currentSong, setCurrentSong }) => {
+    const [artist, setArtist] = useState({});
+    const [genre, setGenre] = useState({});
+    const [subgenre, setSubgenre] = useState({});
+    const [banger, setBanger] = useState({});
+    const [crap, setCrap] = useState({});
+    const [liked, setLiked] = useState('');
+    const [hated, setHated] = useState('');
+    const [show, setShow] = useState({});
+    const [related, setRelated] = useState(false);
+
+    const { handleLogin } = SignIn;
+
+    // Set a specific object respective to the current song
+    const setItem = (location, action) => {
+        axios.get(location)
+            .then(response => {{
+                action(response.data[0] || response.data);
+            }})
+            .catch(err => console.error(err));
+    }
+    
+    // Fetch the API to get all necessary data for the song
+    useEffect(() => {
+        setItem(`${url}/artists/${song.artist_id}`, setArtist);
+        setItem(`${url}/genres/${song.genre_id}`, setGenre);
+    }, [song, url]);
 
     useEffect(() => {
-        if (!song?.artist_id || !song?.genre_id) return;
+        setItem(`${url}/subgenres/${artist.subgenre_id || 0}`, setSubgenre);
+    }, [artist, filtered, url])
 
-        const fetchData = async() => {
-            try {
-                const [artistRes, genreRes] = await Promise.all ([
-                    axios.get(`${url}/artists/${song.artist_id}`),
-                    axios.get(`${url}/genres/${song.genre_id}`)
-                ]);
-                setArtist(artistRes.data);
+    useEffect(() => {
+        if (subgenre.origin_id === song.genre_id
+        || subgenre.inspiration_id === song.genre_id) 
+            setRelated(true);
+        else setRelated(false);
 
-                const genreData = Array.isArray(genreRes.data) 
-                    ? genreRes.data[0] : genreRes.data;
-                setGenre(genreData);
-            } catch (err) {
-                console.error(err);
+        setShow(filtered // If filtered, show related music if it's in a subgenre
+            ? subgenre && related
+            : genre
+        );
+    }, [subgenre])
+
+    useEffect(() => console.log(currentSong), [currentSong])
+//#region interest filters
+    // Handle like/unlike or hate/unhate depending on which button is clicked
+    const handleAction = useCallback((choice, location, state, method) => {
+        const action = song === state
+            ? `un${choice}` : choice;
+            
+        axios.post(`${url}/${action}/${song.artist_id}/${sessionStorage.getItem('username')}`)
+            .then(() => markSong(location, method))
+            .catch(err => console.error(err));
+    }, [song, banger, setBanger, crap, setCrap]);
+
+    // Get songs that are liked/hated by the user
+    const markSong = (location, action) => {
+        axios.get(`${url}/${location}/${sessionStorage.getItem('username')}`)
+        .then(response => {
+            for (let i=0; i<response.data.length; i++){
+                if (response.data[i].artist_id === song.artist_id){ 
+                    action(song);
+                }
             }
-        };
 
-        fetchData();
-    }, [song?.artist_id, song?.genre_id, url]);
-    
-    useEffect(() => {
-        if (!song?.subgenre_id) return;
-
-        axios.get(`${url}/subgenres/${song.subgenre_id}`)
-        .then(res => {
-            setSubgenre(Array.isArray(res.data) ? res.data[0] : res.data);
-            console.log(res.data);
+            setLiked(song === banger ? 'liked' : '');
+            setHated(song === crap ? 'hated' : '');
         })
-        .catch(err => {
-            if (err.name !== 'CanceledError') console.error(err);
-        });
-    }, [song?.subgenre_id, url])
-    
-    const related = subgenre?.origin_id === song.genre_id
-        || subgenre?.inspiration_id === song.genre_id;
+        .catch(err => console.error(err));
+    }
 
-    const show = filtered ? related : genre;
-    if (!artist || !genre) return null;
-    if (!show) return null;
-    
-    // useEffect(() => {
-    //     if (!song) return;
-    //     setItem(`${url}/artists/${song.artist_id}`, setArtist);
-    //     console.log(song);
-    //     setItem(`${url}/genres/${song.genre_id}`, setGenre);
-    // }, [song, url]);
-
-    // useEffect(() => {
-    //     if (!artist?.subgenre_id) return;
-    //     setItem(`${url}/subgenres/${artist.subgenre_id}`, setSubgenre);
-    // }, [artist, url])
-
-    // useEffect(() => {
-    //     if (!subgenre) return;
-
-    //     const isRelated = subgenre.origin_id === song.genre_id
-    //     || subgenre.inspiration_id === song.genre_id;
-
-    //     setRelated(isRelated);
-
-    //     setShow(filtered // If filtered, show related music if it's in a subgenre
-    //         ? isRelated
-    //         : genre
-    //     );
-    // }, [subgenre, genre, filtered, song])
-    return (<div className="song">
-        <p>{song.song_name}</p>
-        <p>{artist?.artist_name}</p>
-        <p>{subgenre?.subgenre_name ?? genre.genre_name}</p>
-    </div>)
+    useEffect(() => {
+        markSong('bangers', setBanger);
+        markSong('crap', setCrap);
+    }, [handleAction])
+//#endregion
+    if (show && song !== crap)
+        return (<div className="song">
+            <div className="song-contents" onClick={() => setCurrentSong(song.song_name)}>
+                <span className="song-filterer"></span>
+                <span className="song-info">
+                    <p>{song?.song_name}</p>
+                    <p>{artist?.artist_name}</p>
+                    <p>{subgenre?.subgenre_name ?? genre?.genre_name}</p>
+                </span>
+                <span className="song-filterer">
+                    {sessionStorage.getItem('username') 
+                    && <img 
+                        className={liked} 
+                        src={like} 
+                        onClick={() => handleAction('like', 'bangers', banger, setBanger)} 
+                        alt="like" 
+                    />}
+                    {sessionStorage.getItem('username') 
+                    && <img 
+                        className={hated} 
+                        src={hate} 
+                        onClick={() => handleAction('hate', 'crap', crap, setCrap)} 
+                        alt="hate" 
+                    />}
+                </span>
+            </div>
+        </div>)
 }
 
 export default Song;

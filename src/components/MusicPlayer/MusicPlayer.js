@@ -6,25 +6,47 @@ import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai"; // icons f
 import { IconContext } from "react-icons"; // for customizing the icons
 import './MusicPlayer.scss';
 
-const MusicPlayer = ({ song }) => {
-  // Play/pause
+const MusicPlayer = ({ song, setSong }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const selectedTrack = tunes.find(tune => tune && tune.songName.includes(song));
+
+  const selectedTrack = song
+  ? tunes.find(tune => tune?.songName.includes(song))
+  : null;
+
   const defaultTrack = tunes.find(tune => tune && tune.songName.includes('Flames'));
-  const [play, { pause, duration, sound }] = useSound(selectedTrack ? selectedTrack.src : defaultTrack.src);
-    
+
+  const trackSrc = selectedTrack
+  ? selectedTrack.src
+  : defaultTrack.src;
+
   // Timeline
   const [currTime, setCurrTime] = useState({
       min: "",
       sec: "",
   }); // current position of the audio in minutes and seconds
 
-  const [seconds, setSeconds] = useState(); // current position of the audio in seconds
+  const [seconds, setSeconds] = useState("0:00"); // current position of the audio in seconds
+    
+  const [play, { pause, duration, sound }] = useSound(
+    trackSrc, { interrupt: true}
+  );
+  
+  useEffect(() => {
+    const timestamp = currTime;
+    if (sound) sound.stop();
+    pause();
+    setCurrTime(timestamp);
+  }, [trackSrc])
 
   // Play/Pause
-  const playingButton = () => {
-        setIsPlaying(!isPlaying);
-        isPlaying ? pause() : play();
+  const playPause = () => {
+    if (!sound) return;
+    
+    setIsPlaying(prev => {
+      if (prev) pause();
+      else play();
+      return !prev;
+    });
   };
 
   const sec = duration / 1000;
@@ -53,7 +75,7 @@ const MusicPlayer = ({ song }) => {
 
     return (
         <div className="component">
-              <button className="playButton" onClick={() => playingButton}>
+              <button className="playButton" onClick={() => playPause()}>
                 <IconContext.Provider value={{ size: "3em", color: "#27AE60" }}>
                   {isPlaying 
                     ? <AiFillPauseCircle /> 
@@ -68,17 +90,20 @@ const MusicPlayer = ({ song }) => {
                     ? currTime.sec : `0${currTime.sec}`}
                 </p>
             </div>
-            <input
-                type="range"
-                min="0"
-                max={duration / 1000}
-                default="0"
-                value={seconds}
-                className="timeline"
-                onChange={(e) => {
-                    sound.seek([e.target.value]);
-                }}
-            />
+            <div className="slider">
+              <p id="song">{song}</p>
+              <input
+                  type="range"
+                  min="0"
+                  max={duration / 1000}
+                  default="0"
+                  value={seconds}
+                  className="timeline"
+                  onChange={(e) => {
+                      sound.seek([e.target.value]);
+                  }}
+              />
+            </div>
             <p>
                 {time.min}:{time.sec}
             </p>
