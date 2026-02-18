@@ -13,7 +13,7 @@ const MusicPlayer = ({ song, setSong }) => {
   ? tunes.find(tune => tune?.songName.includes(song))
   : null;
 
-  const defaultTrack = tunes.find(tune => tune && tune.songName.includes('Flames'));
+  const defaultTrack = tunes.find(tune => tune && tune.songName.includes('silence'));
 
   const trackSrc = selectedTrack
   ? selectedTrack.src
@@ -33,15 +33,13 @@ const MusicPlayer = ({ song, setSong }) => {
   
   useEffect(() => {
     const timestamp = currTime;
-    if (sound) sound.stop();
-    pause();
+    if (sound) pause();
+    else play();
     setCurrTime(timestamp);
   }, [trackSrc])
 
   // Play/Pause
   const playPause = () => {
-    if (!sound) return;
-    
     setIsPlaying(prev => {
       if (prev) pause();
       else play();
