@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import './ResultsPage.scss';
-import Song from './Song';
+import Song from '../../components/Song/Song';
 import { Link, useParams } from 'react-router-dom';
+import MusicPlayer from '../../components/MusicPlayer/MusicPlayer';
 
 const ResultsPage = ({ url }) => {
     const [songs, setSongs] = useState([]);
@@ -10,6 +11,7 @@ const ResultsPage = ({ url }) => {
     const [focusedSongs, setFocusedSongs] = useState([]);
     const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
+    const [currentSong, setCurrentSong] = useState(null);
     const [loading, setLoading] = useState(true);
     const [filterBtnText, setFilterBtnText] = useState('Show only like music');
     const { id1, id2 } = useParams();
@@ -24,8 +26,8 @@ const ResultsPage = ({ url }) => {
                 }
             });
             if (!similar.includes(song) && ( // Show all within selected genres
-                song.inspiration_id == id1 || song.inspiration_id == id2 ||
-                song.origin_id == id1 || song.origin_id == id2
+                song.inspiration_id === id1 || song.inspiration_id === id2 ||
+                song.origin_id === id1 || song.origin_id === id2
             )) {
                 similar.push(song);
             }
@@ -53,35 +55,47 @@ const ResultsPage = ({ url }) => {
             setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers)
         ])
         .catch(err => console.error('Error fetching data', err))
-        .finally(setLoading(false));
+        .finally(() => setLoading(false));
     }, [loading, !songs]);
 
+    const renderSong = (song) => {
+        
+    }
     
     return loading ? <h1>loading</h1> 
     : <div className="results-page">
         <div className='results-side'>
             <article className='results-box'>
-            {focusedSongs.length > 0
-            ? focusedSongs.map(song => {
-                    return <Song 
-                        key={song.id}
-                        song={song} 
-                        url={url} 
-                        filtered={filtered} 
-                        id1={id1} 
-                        id2={id2}
-                    />
-                })
-            : curatedSongs.map(song => {
-                return <Song 
-                        key={song.id}
-                        song={song} 
-                        url={url} 
-                        filtered={filtered} 
-                        id1={id1} 
-                        id2={id2}
-                    />
-            })}
+                <article className='results-list'>
+                    {focusedSongs.length > 0
+                    ? focusedSongs.map(song => {
+                        return <Song 
+                            key={song.id}
+                            song={song} 
+                            setCurrentSong={setCurrentSong}
+                            url={url} 
+                            filtered={filtered} 
+                            id1={id1} 
+                            id2={id2}
+                        />
+                    })
+                    : curatedSongs.map(song => {
+                        return <Song 
+                            key={song.id}
+                            song={song} 
+                            setCurrentSong={setCurrentSong}
+                            url={url} 
+                            filtered={filtered} 
+                            id1={id1} 
+                            id2={id2}
+                        />
+                    
+                })}
+                </article>
+                <MusicPlayer 
+                song={currentSong} 
+                setSong={setCurrentSong}
+                className="sticky" />
             </article>
             <button className="butt-filter" 
                 onClick={() => handleFilter()}>

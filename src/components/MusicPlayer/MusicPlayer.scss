@@ -4,6 +4,8 @@
 }
 
 .component {
+  margin-bottom: -15px;
+  margin-top: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,7 +41,18 @@
 }
 
 input[type="range"] {
+  position: relative;
   background-color: #27ae60;
+}
+
+.slider {
+  position: relative;
+}
+
+#song {
+  position: absolute;
+  bottom: 15px;
+  left: -35px;
 }
 
 @media (max-width: 900px) {

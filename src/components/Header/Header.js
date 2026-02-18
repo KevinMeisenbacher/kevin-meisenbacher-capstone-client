@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Header.scss';
 import logo from '../../assets/img/logo.png';
-import SignUp from '../Header/SignUp';
-import SignIn from '../Header/SignIn';
+import SignUp from './SignUp';
+import SignIn from './SignIn';
 
 const Header = () => {
   const [loggingIn, setLoggingIn] = useState(false);
@@ -13,65 +14,74 @@ const Header = () => {
   const [signupText, setSignupText] = useState('Sign Up');
   const [token, setToken] = useState(sessionStorage.getItem("JWTtoken"));
 
-  const handleLogin = () => {
-    if (token) {
-        setToken(null);
-        setLoginText('Log In');
+    const handleLogin = () => {
+      if (loggedIn) {
+        setToken('');
         sessionStorage.clear();
-    }
-    else {
+        setLoggedIn(false);
+      }
+      else {
         setSigningUp(false);
         setLoggingIn(!loggingIn);
+      }
     }
-  }
 
-  const handleSignup = () => {
+    const handleSignup = () => {
       setLoggingIn(false);
       setSigningUp(!signingUp);
-  }
-
-  useEffect(() => {
-    if (!token) {
-      return;
     }
-
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setCurrentUser(response.data.username);
-        sessionStorage.setItem('username', response.data.username);
-        setToken(sessionStorage.getItem('JWTtoken'));
-        setLoginText('Log Out');
-        setSignupText('Account');
-      } catch (error) {
-        console.error(error);
+  
+    useEffect(() => {
+      if (!token) {
+        return;
       }
-    };
-    fetchProfile();
-  }, [token]); 
+  
+      const fetchProfile = async () => {
+        try {
+          const response = await axios.get('http://localhost:8080/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setCurrentUser(response.data.username);
+          sessionStorage.setItem('username', response.data.username);
+          setLoggedIn(true);
+          setLoggingIn(false);
+          setSigningUp(false);
+          setToken(sessionStorage.getItem('JWTtoken'));
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchProfile();
+    }, [token, loggedIn]); 
 
-  return <header className='header'>
-    <img src={logo}></img>
-    <aside className='side-bar'>
-    {token && <h3 className='profile-box'>
-      {currentUser}
-    </h3>}
-    <section className='dashboard'>
-      <span className="header-btns">
-        <button className='butt-header' onClick={() => handleLogin()}>{loginText}</button>
-        <button className='butt-header' onClick={() => handleSignup()}>{signupText}</button>
-      </span>
-      {signingUp && <SignUp />}
-      {loggingIn && <SignIn 
-        setToken={setToken}
-        setLoggingIn={setLoggingIn}
-      />}
-    </section>
-    </aside>
+    return <header className='header'>
+      <Link to='/'>
+        <img src={logo}></img>
+      </Link>
+      <aside className='side-bar'>
+      {token && <h3 className='profile-box'>
+        {currentUser}
+      </h3>}
+      <section className='dashboard'>
+        <span className="header-btns">
+          <button className='butt-header' onClick={() => handleLogin()}>
+            {loggedIn ? 'Log Out' : 'Log In'}</button>
+          <button className='butt-header' onClick={() => handleSignup()}>
+            {signupText}</button>
+        </span>
+        <SignUp 
+            signedUp={signedUp}
+            setSignedUp={setSignedUp} 
+            setSignupText={setSignupText}
+        />
+        {loggingIn && <SignIn 
+          setToken={setToken}
+        />}
+      </section>
+      </aside>
   </header>
 }
 

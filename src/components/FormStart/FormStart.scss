@@ -1,0 +1,59 @@
+@use '../../partials/_variables' as *;
+@use '../../partials/_fonts' as *;
+
+.hidden {
+    display: none;
+}
+
+.form-start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: $black;
+        padding: 25px;
+        margin-top: 50px;
+        margin-bottom: 25px;
+        @media(min-width: $laptop) { width: 844px; }
+    }
+
+    &__edge {
+        display: flex;
+        align-items: center;
+    }
+} 
+
+.butt-confirm {
+    background-color: $darkBlue;
+    color: $lightBlue;
+    font-family: 'Audiowide';
+    font-size: 64px;
+    padding: 10px 50px;
+    border: 5px solid $lightBlue;
+    border-radius: 10px;
+}
+
+.choices {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: $black;
+
+    &__box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 407px;
+        height: 387px;
+        border-radius: .3125rem;
+        background-color: $grey;
+
+        &--selected {
+            border: 5px solid $lightBlue;
+        }
+    }
+}
