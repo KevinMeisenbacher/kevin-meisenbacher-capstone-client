@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import useSound from 'use-sound';
-import { tunes } from './MusicArray';
+import { tunes } from '../../components/MusicPlayer/MusicArray';
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai"; // icons for play and pause
 import { IconContext } from "react-icons"; // for customizing the icons
 import './MusicPlayer.scss';

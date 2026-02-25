@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import './SignIn.scss';
+import './SignUp.scss';
 
 const SignIn = ({ setToken, setLoggingIn }) => {
     const [loading, setLoading] = useState(true);
@@ -29,30 +29,25 @@ const SignIn = ({ setToken, setLoggingIn }) => {
     const handleLogin = () => {
         login();
     }
-
-    const renderForm = () => {
-        return (
-            <form className={`form form--signin`} >
-                <div className='input-field--signin'>
-                    <span></span> <h3>Log In</h3>
-                </div>
-                <div className='input-field--signin'>
-                    <span>Username</span> 
-                    <input type="text" name="username" onChange={e => handleForm(e)} /> 
-                </div>
-                <div className='input-field--signin'>
-                    <span>Password</span> 
-                    <input type="password" name="password" onChange={e => handleForm(e)} />
-                </div>
-                <div>
-                    <span></span> 
-                    <button className='butt signin' onClick={e => handleLogin()}>Enter</button>
-                </div>
-            </form>
-        );
-    }
-
-    return renderForm();
+    return (
+        <form className={`form form--signin`} >
+            <div className='input-field--signin'>
+                <span></span> <h3>Log In</h3>
+            </div>
+            <div className='input-field--signin'>
+                <span>Username</span> 
+                <input type="text" name="username" onChange={e => handleForm(e)} /> 
+            </div>
+            <div className='input-field--signin'>
+                <span>Password</span> 
+                <input type="password" name="password" onChange={e => handleForm(e)} />
+            </div>
+            <div>
+                <span></span> 
+                <button className='butt signin' onClick={e => handleLogin()}>Enter</button>
+            </div>
+        </form>
+    );
 }
 
 export default SignIn;

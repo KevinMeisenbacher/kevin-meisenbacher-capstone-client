@@ -1,14 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from 'axios';
 import './Song.scss';
-import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
-import SignIn from "../../components/Header/SignIn";
 
 // Images
 import like from '../../assets/img/banger.png';
 import hate from '../../assets/img/poop.png';
 
-const Song = ({ song, url, filtered, currentSong, setCurrentSong }) => {
+const Song = ({ song, url, filtered, setCurrentSong }) => {
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
@@ -18,8 +16,6 @@ const Song = ({ song, url, filtered, currentSong, setCurrentSong }) => {
     const [hated, setHated] = useState('');
     const [show, setShow] = useState({});
     const [related, setRelated] = useState(false);
-
-    const { handleLogin } = SignIn;
 
     // Set a specific object respective to the current song
     const setItem = (location, action) => {
@@ -52,7 +48,6 @@ const Song = ({ song, url, filtered, currentSong, setCurrentSong }) => {
         );
     }, [subgenre])
 
-    useEffect(() => console.log(currentSong), [currentSong])
 //#region interest filters
     // Handle like/unlike or hate/unhate depending on which button is clicked
     const handleAction = useCallback((choice, location, state, method) => {

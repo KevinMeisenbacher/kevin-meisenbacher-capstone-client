@@ -8,9 +8,11 @@ import SignIn from './SignIn';
 
 const Header = () => {
   const [loggingIn, setLoggingIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [loginText, setLoginText] = useState('Log In');
   const [currentUser, setCurrentUser] = useState(null);
   const [signingUp, setSigningUp] = useState(false);
+  const [signedUp, setSignedUp] = useState(false);
   const [signupText, setSignupText] = useState('Sign Up');
   const [token, setToken] = useState(sessionStorage.getItem("JWTtoken"));
 
@@ -72,11 +74,11 @@ const Header = () => {
           <button className='butt-header' onClick={() => handleSignup()}>
             {signupText}</button>
         </span>
-        <SignUp 
+        {signingUp && <SignUp 
             signedUp={signedUp}
             setSignedUp={setSignedUp} 
             setSignupText={setSignupText}
-        />
+        />}
         {loggingIn && <SignIn 
           setToken={setToken}
         />}
