@@ -6,32 +6,58 @@ import logo from '../../assets/img/logo.png';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 
-const Header = () => {
+const Header = (url) => {
   const [loggingIn, setLoggingIn] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [loginText, setLoginText] = useState('Log In');
+  const [, setUser] = useState('Log In');
   const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(sessionStorage.getItem("JWTtoken"));
   const [signingUp, setSigningUp] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
+  const [loginText, setLoginText] = useState('Log In');
   const [signupText, setSignupText] = useState('Sign Up');
-  const [token, setToken] = useState(sessionStorage.getItem("JWTtoken"));
+    const [formValues, setFormValues] = useState({
+        username: '',
+        password: '',
+    });
+
+    useEffect(() => {
+      if (!signedUp) return;
+        axios.get(`${url}/users`)
+        .then(response => {
+          setFormValues({
+          username: response.data.at(-1).username,
+          password: response.data.at(-1).password
+        })
+        })
+        .catch(err => console.error(err));
+    }, [signedUp])
 
     const handleLogin = () => {
-      if (loggedIn) {
-        setToken('');
         sessionStorage.clear();
-        setLoggedIn(false);
-      }
-      else {
         setSigningUp(false);
         setLoggingIn(!loggingIn);
-      }
+        if (loggedIn) {
+          setToken(null);
+          setCurrentUser(null);
+          setLoggedIn(false);
+          setLoginText('Log In');
+        }
+        console.log(sessionStorage);
     }
 
     const handleSignup = () => {
       setLoggingIn(false);
       setSigningUp(!signingUp);
     }
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/users')
+        .then(response => {
+          setUser(response.data.find(person => person.username === sessionStorage.username)) 
+        })
+        .catch(err => console.error(err));
+    }, [])
   
     useEffect(() => {
       if (!token) {
@@ -69,17 +95,18 @@ const Header = () => {
       </h3>}
       <section className='dashboard'>
         <span className="header-btns">
-          <button className='butt-header' onClick={() => handleLogin()}>
-            {loggedIn ? 'Log Out' : 'Log In'}</button>
-          <button className='butt-header' onClick={() => handleSignup()}>
-            {signupText}</button>
+          <button className='butt-header' onClick={() => handleLogin()}>{loggedIn ? 'Log Out' : 'Log In'}</button>
+          <button className='butt-header' onClick={() => handleSignup()}>{signupText}</button>
         </span>
         {signingUp && <SignUp 
-            signedUp={signedUp}
-            setSignedUp={setSignedUp} 
-            setSignupText={setSignupText}
+            setSignedUp={setSignedUp}
         />}
         {loggingIn && <SignIn 
+          setLoggingIn={setLoggingIn}
+          setLoginText={setLoginText}
+          formValues={formValues}
+          setFormValues={setFormValues}
+          token={token}
           setToken={setToken}
         />}
       </section>

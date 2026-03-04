@@ -48,6 +48,7 @@ import fire from '../../assets/tunes/Fire It Up.mp3';
 import ass from '../../assets/tunes/Free Your Mind and Your Ass Will Follow.mp3';
 import bait from '../../assets/tunes/Good Bait.mp3';
 import bustin from '../../assets/tunes/Bustin\' Out.mp3';
+import reason from '../../assets/tunes/There Must Be a Reason.mp3';
 import think from '../../assets/tunes/Think.mp3';
 import conception from '../../assets/tunes/Conception.mp3';
 import stone from '../../assets/tunes/Stone City Band, Hi.mp3';
@@ -129,8 +130,9 @@ export const tunes = [
     {songName: 'Symphony No. 1.mp3', src: symph1},
     {songName: 'Tell Me Baby.mp3', src: tell},
     {songName: 'The Sick Bed of Cúchulainn.mp3', src: sick},
-    {songName: 'The Sick Voyevoda.mp3', src: voyevoda},
+    {songName: 'The Voyevoda.mp3', src: voyevoda},
     {songName: 'Think.mp3', src: think},
+    {songName: 'There Must Be a Reason.mp3', src: reason},
     {songName: 'Three early Kurfürstensonatas, No. 1 in E♭ major.mp3', src: eFlat},
     {songName: 'Through the Fire and Flames.mp3', src: flames},
     {songName: 'Traneing In.mp3', src: traneing},

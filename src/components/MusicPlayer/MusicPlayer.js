@@ -23,7 +23,7 @@ const MusicPlayer = ({ song }) => {
   const [seconds, setSeconds] = useState("0:00"); // current position of the audio in seconds
     
   const [play, { pause, duration, sound }] = useSound(
-    selectedTrack.src
+    selectedTrack?.src
   );
   
   useEffect(() => {
@@ -31,7 +31,7 @@ const MusicPlayer = ({ song }) => {
       pause();
       setIsPlaying(false);
     }
-  }, [selectedTrack.src])
+  }, [selectedTrack?.src])
 
   useEffect(() => {
     if (autoPlay) {

@@ -8,6 +8,7 @@ import MusicPlayer from '../../components/MusicPlayer/MusicPlayer';
 const ResultsPage = ({ url }) => {
     const [_, setSongs] = useState([]);
     const [curatedSongs, setCuratedSongs] = useState([]);
+    const [banger, setBanger] = useState({});
     const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [currentSong, setCurrentSong] = useState(null);
@@ -61,6 +62,8 @@ const ResultsPage = ({ url }) => {
                             key={song.id}
                             song={song} 
                             setCurrentSong={setCurrentSong}
+                            banger={banger}
+                            setBanger={setBanger}
                             url={url} 
                             filtered={filtered} 
                             id1={id1} 

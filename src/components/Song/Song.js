@@ -7,6 +7,7 @@ import like from '../../assets/img/banger.png';
 import hate from '../../assets/img/poop.png';
 
 const Song = ({ song, url, filtered, setCurrentSong }) => {
+    const [user, setUser] = useState({});
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
@@ -25,6 +26,15 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
             }})
             .catch(err => console.error(err));
     }
+
+    // Get the logged in user by matching sessionStorage with the users table
+    useEffect(() => {
+        axios.get(`${url}/users`)
+        .then(response => {
+            setUser(response.data.find(user => user?.username === sessionStorage?.username));
+        })
+        .catch(err => console.error(err));
+    }, [url])
     
     // Fetch the API to get all necessary data for the song
     useEffect(() => {
@@ -51,26 +61,26 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
 //#region interest filters
     // Handle like/unlike or hate/unhate depending on which button is clicked
     const handleAction = useCallback((choice, location, state, method) => {
-        const action = song === state
+        const action = state?.artist_id === song.artist_id
             ? `un${choice}` : choice;
             
-        axios.post(`${url}/${action}/${song.artist_id}/${sessionStorage.getItem('username')}`)
+        axios.post(`${url}/${action}/${song.artist_id}/${user?.id}`)
             .then(() => markSong(location, method))
+            .then(markSong('bangers', song || {}))
             .catch(err => console.error(err));
-    }, [song, banger, setBanger, crap, setCrap]);
+    }, [song, banger, setBanger, crap, setCrap, user]);
 
     // Get songs that are liked/hated by the user
     const markSong = (location, action) => {
-        axios.get(`${url}/${location}/${sessionStorage.getItem('username')}`)
+        axios.get(`${url}/${location}/${user?.id}`)
         .then(response => {
             for (let i=0; i<response.data.length; i++){
                 if (response.data[i].artist_id === song.artist_id){ 
                     action(song);
+                    setLiked(song === banger ? 'liked' : '');
+                    setHated(song === crap ? 'hated' : '');
                 }
             }
-
-            setLiked(song === banger ? 'liked' : '');
-            setHated(song === crap ? 'hated' : '');
         })
         .catch(err => console.error(err));
     }
@@ -81,7 +91,7 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
     }, [handleAction])
 //#endregion
     if (show && song !== crap)
-        return (<div className="song">
+        return (<div className={`song ${user ? 'loggedIn' : 'loggedOut'}`}>
             <div className="song-contents" onClick={() => setCurrentSong(song.song_name)}>
                 <span className="song-filterer"></span>
                 <span className="song-info">
@@ -89,22 +99,19 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
                     <p>{artist?.artist_name}</p>
                     <p>{subgenre?.subgenre_name ?? genre?.genre_name}</p>
                 </span>
-                <span className="song-filterer">
-                    {sessionStorage.getItem('username') 
-                    && <img 
+                {sessionStorage.getItem('username') && <span className={`song-filterer`}>
+                     <img 
                         className={liked} 
                         src={like} 
                         onClick={() => handleAction('like', 'bangers', banger, setBanger)} 
                         alt="like" 
-                    />}
-                    {sessionStorage.getItem('username') 
-                    && <img 
+                    /><img 
                         className={hated} 
                         src={hate} 
                         onClick={() => handleAction('hate', 'crap', crap, setCrap)} 
                         alt="hate" 
-                    />}
-                </span>
+                    />
+                </span>}
             </div>
         </div>)
 }

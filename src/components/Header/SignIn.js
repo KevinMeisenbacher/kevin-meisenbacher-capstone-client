@@ -1,14 +1,7 @@
-import { useState } from 'react';
-import axios from 'axios';
 import './SignUp.scss';
+import axios from 'axios';
 
-const SignIn = ({ setToken, setLoggingIn }) => {
-    const [loading, setLoading] = useState(true);
-    const [formValues, setFormValues] = useState({
-        username: '',
-        password: '',
-    });
-
+const SignIn = ({ formValues, setFormValues, token, setToken, setLoggingIn, setLoginText }) => {
     const handleForm = (e) => {
         const {value, name} = e.target;
         if (name === 'username') setFormValues({...formValues, username: value});
@@ -21,8 +14,10 @@ const SignIn = ({ setToken, setLoggingIn }) => {
             sessionStorage.setItem("JWTtoken", response.data.token);
             setToken(response.data.token);
         })
-        .then(setLoggingIn(false))
-        .then(setLoading(false))
+        .then(
+            setLoggingIn(false),
+            setLoginText('Log Out')
+    )
         .catch(err => console.error(err));
     }
 

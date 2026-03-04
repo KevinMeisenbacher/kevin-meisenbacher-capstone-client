@@ -56,6 +56,10 @@ h3 {
     @include desktop { flex-direction: row; }
 }
 
+input, button {
+    background-color: $black;
+}
+
 .input-field {        
     &--signup { 
         @include input;

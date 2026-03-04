@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './SignUp.scss';
 
-const SignUp = () => {
+const SignUp = ({ setSignedUp }) => {
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
@@ -66,6 +66,7 @@ const SignUp = () => {
         
         if (username.includes('') && password.includes('') && confirmPassword.includes('') && email.includes(''))
             axios.post('http://localhost:8080/signup', formValues)
+            .then(setSignedUp(true))
             .catch(err => console.error(err));
         else 
             return;

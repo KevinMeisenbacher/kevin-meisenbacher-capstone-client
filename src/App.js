@@ -18,7 +18,7 @@ function App() {
   return (
     <main className="base-container">
       <BrowserRouter>
-        <Header />
+        <Header url={url} />
         <Routes>
           <Route path='/' element={<HomePage 
             selected={selected}
