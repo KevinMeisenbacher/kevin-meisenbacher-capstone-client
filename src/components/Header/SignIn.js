@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import './SignUp.scss';
 import axios from 'axios';
 
-const SignIn = ({ formValues, setFormValues, token, setToken, setLoggingIn, setLoginText }) => {
+const SignIn = ({ formValues, setFormValues, token, setToken, setLoggingIn, setLoginText, setLoading }) => {
     const handleForm = (e) => {
         const {value, name} = e.target;
         if (name === 'username') setFormValues({...formValues, username: value});
@@ -17,7 +18,8 @@ const SignIn = ({ formValues, setFormValues, token, setToken, setLoggingIn, setL
         .then(
             setLoggingIn(false),
             setLoginText('Log Out')
-    )
+        )
+        .then(setLoading(true))
         .catch(err => console.error(err));
     }
 

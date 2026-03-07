@@ -6,7 +6,7 @@ import logo from '../../assets/img/logo.png';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 
-const Header = (url) => {
+const Header = ({url, setLoading}) => {
   const [loggingIn, setLoggingIn] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [, setUser] = useState('Log In');
@@ -16,10 +16,10 @@ const Header = (url) => {
   const [signedUp, setSignedUp] = useState(false);
   const [loginText, setLoginText] = useState('Log In');
   const [signupText, setSignupText] = useState('Sign Up');
-    const [formValues, setFormValues] = useState({
-        username: '',
-        password: '',
-    });
+  const [formValues, setFormValues] = useState({
+      username: '',
+      password: '',
+  });
 
     useEffect(() => {
       if (!signedUp) return;
@@ -42,8 +42,8 @@ const Header = (url) => {
           setCurrentUser(null);
           setLoggedIn(false);
           setLoginText('Log In');
+          setLoading(true);
         }
-        console.log(sessionStorage);
     }
 
     const handleSignup = () => {
@@ -108,6 +108,7 @@ const Header = (url) => {
           setFormValues={setFormValues}
           token={token}
           setToken={setToken}
+          setLoading={setLoading}
         />}
       </section>
       </aside>

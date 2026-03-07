@@ -5,14 +5,13 @@ import Song from '../../components/Song/Song';
 import { Link, useParams } from 'react-router-dom';
 import MusicPlayer from '../../components/MusicPlayer/MusicPlayer';
 
-const ResultsPage = ({ url }) => {
+const ResultsPage = ({ url, loading, setLoading }) => {
     const [_, setSongs] = useState([]);
     const [curatedSongs, setCuratedSongs] = useState([]);
     const [banger, setBanger] = useState({});
     const [bangers, setBangers] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [currentSong, setCurrentSong] = useState(null);
-    const [loading, setLoading] = useState(true);
     const { id1, id2 } = useParams();
 
     // Filtering logic
@@ -40,7 +39,6 @@ const ResultsPage = ({ url }) => {
     }
 
     useEffect(() => { // Initialize all the things!
-        setLoading(false && true);
         Promise.all([
             setArray(`${url}/songs`, setSongs),
             setArray(`${url}/songs/${id1}/${id2 || ''}`, setCuratedSongs),
@@ -49,6 +47,7 @@ const ResultsPage = ({ url }) => {
         .catch(err => console.error('Error fetching data', err))
         .finally(() => {
             setLoading(false);
+            if (sessionStorage.getItem('loading') === true) sessionStorage.setItem('loading', false);
         });
     }, [loading]);
     
@@ -64,6 +63,7 @@ const ResultsPage = ({ url }) => {
                             setCurrentSong={setCurrentSong}
                             banger={banger}
                             setBanger={setBanger}
+                            setLoading={setLoading}
                             url={url} 
                             filtered={filtered} 
                             id1={id1} 

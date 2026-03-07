@@ -9,16 +9,23 @@ import ResultsPage from './pages/ResultsPage/ResultsPage';
 function App() {
   const url = 'http://localhost:8080';
   const [selected, setSelected] = useState(false); // Page 1 choice
+  const [loading, setLoading] = useState(true);
 
   const results = <ResultsPage 
     url={url}
     selected={selected}
+    loading={loading}
+    setLoading={setLoading}
   />
 
   return (
     <main className="base-container">
       <BrowserRouter>
-        <Header url={url} />
+        <Header 
+          url={url}
+          loading={loading}
+          setLoading={setLoading} 
+        />
         <Routes>
           <Route path='/' element={<HomePage 
             selected={selected}

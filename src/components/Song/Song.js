@@ -6,8 +6,8 @@ import './Song.scss';
 import like from '../../assets/img/banger.png';
 import hate from '../../assets/img/poop.png';
 
-const Song = ({ song, url, filtered, setCurrentSong }) => {
-    const [user, setUser] = useState({});
+const Song = ({ song, url, filtered, setCurrentSong, setLoading }) => {
+    const [user, setUser] = useState(null);
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
@@ -29,12 +29,8 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
 
     // Get the logged in user by matching sessionStorage with the users table
     useEffect(() => {
-        axios.get(`${url}/users`)
-        .then(response => {
-            setUser(response.data.find(user => user?.username === sessionStorage?.username));
-        })
-        .catch(err => console.error(err));
-    }, [url])
+        setUser(sessionStorage.getItem('username') || null);
+    }, []);
     
     // Fetch the API to get all necessary data for the song
     useEffect(() => {
@@ -67,6 +63,7 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
         axios.post(`${url}/${action}/${song.artist_id}/${user?.id}`)
             .then(() => markSong(location, method))
             .then(markSong('bangers', song || {}))
+            .then(setLoading(true))
             .catch(err => console.error(err));
     }, [song, banger, setBanger, crap, setCrap, user]);
 
@@ -91,7 +88,7 @@ const Song = ({ song, url, filtered, setCurrentSong }) => {
     }, [handleAction])
 //#endregion
     if (show && song !== crap)
-        return (<div className={`song ${user ? 'loggedIn' : 'loggedOut'}`}>
+        return (<div className={`song ${sessionStorage.getItem('username') ? 'loggedIn' : 'loggedOut'}`}>
             <div className="song-contents" onClick={() => setCurrentSong(song.song_name)}>
                 <span className="song-filterer"></span>
                 <span className="song-info">

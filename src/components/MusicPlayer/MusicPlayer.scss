@@ -51,7 +51,8 @@ input[type="range"] {
 
 #song {
   position: absolute;
-  bottom: 15px;
+  text-wrap: nowrap;
+  bottom: 4px;
   left: -35px;
 }
 
