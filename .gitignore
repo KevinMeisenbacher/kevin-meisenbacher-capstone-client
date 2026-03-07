@@ -11,6 +11,9 @@ BlankPage.js
 
 # production
 /build
+*.tar
+*.tar.gz
+*.tgz
 
 # misc
 .DS_Store
