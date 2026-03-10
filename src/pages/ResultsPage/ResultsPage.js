@@ -15,7 +15,13 @@ const ResultsPage = ({ url, loading, setLoading }) => {
     const [crap, setCrap] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [currentSong, setCurrentSong] = useState(null);
+    const [user, setUser] = useState(null);
     const { id1, id2 } = useParams();
+
+    // Get the logged in user by matching sessionStorage with the users table
+    useEffect(() => {
+        setUser(sessionStorage.getItem('username') || null);
+    }, []);
 
     // Filtering logic
     const focusedSongs = filtered
@@ -90,6 +96,7 @@ const ResultsPage = ({ url, loading, setLoading }) => {
                             genres={genres}
                             subgenres={subgenres}
                             setLoading={setLoading}
+                            user={user}
                             url={url} 
                             filtered={filtered} 
                             id1={id1} 

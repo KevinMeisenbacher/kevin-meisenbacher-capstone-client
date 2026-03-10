@@ -34,7 +34,8 @@ const Header = ({url, setLoading}) => {
     }, [signedUp])
 
     const handleLogin = () => {
-        sessionStorage.clear();
+        sessionStorage.removeItem('JWTToken');
+        sessionStorage.removeItem('username');
         setSigningUp(false);
         setLoggingIn(!loggingIn);
         if (loggedIn) {

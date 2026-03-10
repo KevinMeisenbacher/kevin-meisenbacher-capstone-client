@@ -14,12 +14,10 @@ const SignIn = ({ formValues, setFormValues, token, setToken, setLoggingIn, setL
         .then(response => {
             sessionStorage.setItem("JWTtoken", response.data.token);
             setToken(response.data.token);
+            setLoggingIn(false);
+            setLoginText('Log Out');
+            setLoading(true);
         })
-        .then(
-            setLoggingIn(false),
-            setLoginText('Log Out')
-        )
-        .then(setLoading(true))
         .catch(err => console.error(err));
     }
 
