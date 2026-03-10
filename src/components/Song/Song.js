@@ -6,26 +6,18 @@ import './Song.scss';
 import like from '../../assets/img/banger.png';
 import hate from '../../assets/img/poop.png';
 
-const Song = ({ song, url, filtered, setCurrentSong, setLoading }) => {
+const Song = ({ artists, genres, subgenres, setLoading,
+                url, filtered, song, setCurrentSong }) => {
     const [user, setUser] = useState(null);
     const [artist, setArtist] = useState({});
     const [genre, setGenre] = useState({});
     const [subgenre, setSubgenre] = useState({});
     const [banger, setBanger] = useState({});
-    const [crap, setCrap] = useState({});
+    const [bummer, setBummer] = useState({});
     const [liked, setLiked] = useState('');
     const [hated, setHated] = useState('');
     const [show, setShow] = useState({});
     const [related, setRelated] = useState(false);
-
-    // Set a specific object respective to the current song
-    const setItem = (location, action) => {
-        axios.get(location)
-            .then(response => {{
-                action(response.data[0] || response.data);
-            }})
-            .catch(err => console.error(err));
-    }
 
     // Get the logged in user by matching sessionStorage with the users table
     useEffect(() => {
@@ -34,12 +26,12 @@ const Song = ({ song, url, filtered, setCurrentSong, setLoading }) => {
     
     // Fetch the API to get all necessary data for the song
     useEffect(() => {
-        setItem(`${url}/artists/${song.artist_id}`, setArtist);
-        setItem(`${url}/genres/${song.genre_id}`, setGenre);
+        artists?.find(artist => artist?.id === song?.artist_id && setArtist(artist));
+        genres?.find(genre => genre?.id === song?.genre_id && setGenre(genre));
     }, [song, url]);
 
     useEffect(() => {
-        setItem(`${url}/subgenres/${artist.subgenre_id || 0}`, setSubgenre);
+        subgenres.find(subgenre => song?.subgenre_id === song.subgenre_id && setSubgenre(subgenre));
     }, [artist, filtered, url])
 
     useEffect(() => {
@@ -65,7 +57,7 @@ const Song = ({ song, url, filtered, setCurrentSong, setLoading }) => {
             .then(markSong('bangers', song || {}))
             .then(setLoading(true))
             .catch(err => console.error(err));
-    }, [song, banger, setBanger, crap, setCrap, user]);
+    }, [song, banger, setBanger, bummer, setBummer, user]);
 
     // Get songs that are liked/hated by the user
     const markSong = (location, action) => {
@@ -75,19 +67,14 @@ const Song = ({ song, url, filtered, setCurrentSong, setLoading }) => {
                 if (response.data[i].artist_id === song.artist_id){ 
                     action(song);
                     setLiked(song === banger ? 'liked' : '');
-                    setHated(song === crap ? 'hated' : '');
+                    setHated(song === bummer ? 'hated' : '');
                 }
             }
         })
         .catch(err => console.error(err));
     }
-
-    useEffect(() => {
-        markSong('bangers', setBanger);
-        markSong('crap', setCrap);
-    }, [handleAction])
 //#endregion
-    if (show && song !== crap)
+    if (show && song !== bummer)
         return (<div className={`song ${sessionStorage.getItem('username') ? 'loggedIn' : 'loggedOut'}`}>
             <div className="song-contents" onClick={() => setCurrentSong(song.song_name)}>
                 <span className="song-filterer"></span>
@@ -105,7 +92,7 @@ const Song = ({ song, url, filtered, setCurrentSong, setLoading }) => {
                     /><img 
                         className={hated} 
                         src={hate} 
-                        onClick={() => handleAction('hate', 'crap', crap, setCrap)} 
+                        onClick={() => handleAction('hate', 'crap', bummer, setBummer)} 
                         alt="hate" 
                     />
                 </span>}

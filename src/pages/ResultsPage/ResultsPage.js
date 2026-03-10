@@ -6,10 +6,13 @@ import { Link, useParams } from 'react-router-dom';
 import MusicPlayer from '../../components/MusicPlayer/MusicPlayer';
 
 const ResultsPage = ({ url, loading, setLoading }) => {
-    const [_, setSongs] = useState([]);
+    const [songs, setSongs] = useState([]);
+    const [artists, setArtists] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [subgenres, setSubgenres] = useState([]);
     const [curatedSongs, setCuratedSongs] = useState([]);
-    const [banger, setBanger] = useState({});
     const [bangers, setBangers] = useState([]);
+    const [crap, setCrap] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [currentSong, setCurrentSong] = useState(null);
     const { id1, id2 } = useParams();
@@ -32,23 +35,45 @@ const ResultsPage = ({ url, loading, setLoading }) => {
     const handleFilter = () => { setFiltered(!filtered) }
     const filterBtnText = filtered ? 'Show only like music' : 'Show all music';
 
-    const setArray = (location, action) => { // Axios automation
-        return axios.get(location)
-            .then(response => {action(response.data)})
-            .catch(err => console.error(err));
+        const setArray = (location, action) => { // Axios automation
+            return axios.get(location)
+                .then(response => {action(response.data)})
+                .catch(err => console.error(err));
+        }
+
+    const initData = () => {
+
+        Promise.all([
+            setArray(`${url}/songs`, setSongs),
+            setArray(`${url}/artists`, setArtists),
+            setArray(`${url}/genres`, setGenres),
+            setArray(`${url}/subgenres`, setSubgenres),
+            setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers),
+            setArray(`${url}/crap/${sessionStorage.getItem('username')}`, setCrap)
+        ])
+        .then(Promise.all([
+            sessionStorage.setItem('songs', JSON.stringify(songs)),
+            sessionStorage.setItem('artists', JSON.stringify(artists)),
+            sessionStorage.setItem('genres', JSON.stringify(genres)),
+            sessionStorage.setItem('subgenres', JSON.stringify(subgenres)),
+            sessionStorage.setItem('bangers', JSON.stringify(bangers)),
+            sessionStorage.setItem('crap', JSON.stringify(crap)),
+        ]))
+        .catch(err => console.error('Error fetching data', err))
     }
 
     useEffect(() => { // Initialize all the things!
-        Promise.all([
-            setArray(`${url}/songs`, setSongs),
-            setArray(`${url}/songs/${id1}/${id2 || ''}`, setCuratedSongs),
-            setArray(`${url}/bangers/${sessionStorage.getItem('username')}`, setBangers)
-        ])
-        .catch(err => console.error('Error fetching data', err))
-        .finally(() => {
+        if (sessionStorage.getItem('songs') === null) initData();
+        else {
+            setSongs(JSON.parse(sessionStorage.getItem('songs')));
+            setArtists(JSON.parse(sessionStorage.getItem('artists')));
+            setGenres(JSON.parse(sessionStorage.getItem('genres')));
+            setSubgenres(JSON.parse(sessionStorage.getItem('subgenres')));
+            setBangers(JSON.parse(sessionStorage.getItem('bangers')));
+            setCrap(JSON.parse(sessionStorage.getItem('crap')));
             setLoading(false);
-            if (sessionStorage.getItem('loading') === true) sessionStorage.setItem('loading', false);
-        });
+        }
+        setArray(`${url}/songs/${id1}/${id2 || ''}`, setCuratedSongs)
     }, [loading]);
     
     return loading ? <h1>loading</h1> 
@@ -61,8 +86,9 @@ const ResultsPage = ({ url, loading, setLoading }) => {
                             key={song.id}
                             song={song} 
                             setCurrentSong={setCurrentSong}
-                            banger={banger}
-                            setBanger={setBanger}
+                            artists={artists}
+                            genres={genres}
+                            subgenres={subgenres}
                             setLoading={setLoading}
                             url={url} 
                             filtered={filtered} 
