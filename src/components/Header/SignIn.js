@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import './SignUp.scss';
 import axios from 'axios';
 
-const SignIn = ({ formValues, setFormValues, token, setToken, setLoggingIn, setLoginText, setLoading }) => {
+const SignIn = ({ formValues, setFormValues, setToken, setLoggingIn, setLoginText, setLoading }) => {
     const handleForm = (e) => {
         const {value, name} = e.target;
         if (name === 'username') setFormValues({...formValues, username: value});

@@ -31,8 +31,8 @@ const Song = ({ artists, genres, subgenres, setLoading,
     }, [song, url]);
 
     useEffect(() => {
-        subgenres.find(subgenre => song?.subgenre_id === song.subgenre_id && setSubgenre(subgenre));
-    }, [artist, filtered, url])
+        subgenres.find(subgenre => subgenre?.id === artist?.subgenre_id && setSubgenre(subgenre));
+    }, [artist, url])
 
     useEffect(() => {
         if (subgenre.origin_id === song.genre_id

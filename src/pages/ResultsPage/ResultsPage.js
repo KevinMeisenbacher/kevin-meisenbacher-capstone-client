@@ -48,7 +48,6 @@ const ResultsPage = ({ url, loading, setLoading }) => {
         }
 
     const initData = () => {
-
         Promise.all([
             setArray(`${url}/songs`, setSongs),
             setArray(`${url}/artists`, setArtists),
@@ -69,7 +68,7 @@ const ResultsPage = ({ url, loading, setLoading }) => {
     }
 
     useEffect(() => { // Initialize all the things!
-        if (sessionStorage.getItem('songs') === null) initData();
+        if (sessionStorage.getItem('songs') === null || JSON.parse(sessionStorage.getItem('songs')).length < 1) initData();
         else {
             setSongs(JSON.parse(sessionStorage.getItem('songs')));
             setArtists(JSON.parse(sessionStorage.getItem('artists')));
@@ -77,8 +76,8 @@ const ResultsPage = ({ url, loading, setLoading }) => {
             setSubgenres(JSON.parse(sessionStorage.getItem('subgenres')));
             setBangers(JSON.parse(sessionStorage.getItem('bangers')));
             setCrap(JSON.parse(sessionStorage.getItem('crap')));
-            setLoading(false);
         }
+        setLoading(false);
         setArray(`${url}/songs/${id1}/${id2 || ''}`, setCuratedSongs)
     }, [loading]);
     
